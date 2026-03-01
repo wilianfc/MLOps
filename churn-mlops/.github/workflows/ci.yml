@@ -1,0 +1,241 @@
+# =============================================================================
+# PASSO 5: CI/CD COM GITHUB ACTIONS — Pipeline MLOps
+# =============================================================================
+#
+# FLUXO DO PIPELINE:
+#
+#   git push / pull_request
+#         │
+#         ▼
+#   ┌─────────────────┐
+#   │  Job: test      │  → Instala deps, treina modelo, executa testes
+#   └────────┬────────┘
+#            │ (só se test passar)
+#            ▼
+#   ┌─────────────────┐
+#   │  Job: docker    │  → Builda e valida a imagem Docker
+#   └─────────────────┘
+#
+# POR QUE CI/CD PARA ML?
+#   Diferente do software tradicional, um pipeline de ML pode falhar de
+#   formas silenciosas: o código roda, mas o modelo produz previsões erradas.
+#   A Integração Contínua força que cada mudança passe por:
+#     1. Retreinamento do modelo
+#     2. Validação de métricas mínimas
+#     3. Teste de carregamento e inferência
+#     4. Build reprodutível da imagem Docker
+#
+# Referências:
+#   - Pr-Peri Blog: GitHub Actions + Docker para CI/CD de modelos ML
+#   - Wikipedia MLOps: Automação CI/CD aplicada ao Machine Learning
+#   - Google for Developers: Automação para desenvolver, testar e implantar ML
+#   - AWS Automated ML Pipeline: Orquestração e automação de pipelines de ML
+# =============================================================================
+
+name: MLOps CI Pipeline — Churn Prediction
+
+# ---------------------------------------------------------------------------
+# GATILHOS: quando o pipeline é executado
+# ---------------------------------------------------------------------------
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+      - develop
+  # Permite execução manual pelo painel do GitHub Actions
+  workflow_dispatch:
+
+# ---------------------------------------------------------------------------
+# Variáveis de ambiente globais
+# ---------------------------------------------------------------------------
+env:
+  PYTHON_VERSION: "3.11"
+  MODEL_PATH: "models/model.pkl"
+  DOCKER_IMAGE_NAME: "churn-prediction-api"
+
+# ---------------------------------------------------------------------------
+# JOBS
+# ---------------------------------------------------------------------------
+jobs:
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # JOB 1: Treinamento, Validação e Testes
+  # ══════════════════════════════════════════════════════════════════════════
+  test:
+    name: "🧪 Treinar Modelo e Executar Testes"
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout do código -----------------------------------------------
+      - name: "📥 Checkout do repositório"
+        uses: actions/checkout@v4
+
+      # 2. Configurar Python ------------------------------------------------
+      - name: "🐍 Configurar Python ${{ env.PYTHON_VERSION }}"
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          # Cache do pip acelera builds subsequentes
+          cache: "pip"
+          cache-dependency-path: "requirements.txt"
+
+      # 3. Instalar dependências --------------------------------------------
+      - name: "📦 Instalar dependências"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          echo "✅ Dependências instaladas com sucesso"
+
+      # 4. Linting básico (ruff é mais rápido que flake8) -------------------
+      - name: "🔍 Verificar qualidade do código (ruff)"
+        run: |
+          pip install ruff
+          ruff check train.py app/app.py tests/ --ignore E501,E402
+        continue-on-error: true  # Não bloqueia o pipeline durante o estudo
+
+      # 5. Treinar o modelo -------------------------------------------------
+      #    STEP CRÍTICO: garante que o artefato seja gerado de forma
+      #    reprodutível a cada push. Em um pipeline de produção, este
+      #    step seria substituído por um trigger para SageMaker Pipelines
+      #    ou Vertex AI Pipelines.
+      - name: "🤖 Treinar modelo de churn"
+        run: |
+          echo "Iniciando treinamento do modelo..."
+          python train.py
+          echo "Artefato gerado:"
+          ls -lh models/
+
+      # 6. Validar artefato gerado ------------------------------------------
+      - name: "✅ Validar existência do artefato"
+        run: |
+          if [ ! -f "${{ env.MODEL_PATH }}" ]; then
+            echo "❌ ERRO: Artefato do modelo não encontrado em ${{ env.MODEL_PATH }}"
+            exit 1
+          fi
+          echo "✅ Artefato validado: $(du -h ${{ env.MODEL_PATH }})"
+
+      # 7. Executar testes automatizados ------------------------------------
+      - name: "🧪 Executar testes de validação"
+        run: |
+          pytest tests/ -v --tb=short --no-header
+        env:
+          MODEL_PATH: ${{ env.MODEL_PATH }}
+
+      # 8. Publicar artefato como GitHub artifact ---------------------------
+      #    Permite download do modelo treinado direto pelo painel do GitHub
+      - name: "📤 Publicar artefatos do modelo"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "churn-model-${{ github.sha }}"
+          path: |
+            models/model.pkl
+            models/metadata.json
+          retention-days: 30   # Mantém por 30 dias para auditoria
+          if-no-files-found: error
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # JOB 2: Build da Imagem Docker
+  # Só executa se o Job de testes for aprovado (needs: test)
+  # ══════════════════════════════════════════════════════════════════════════
+  docker:
+    name: "🐳 Build e Validação da Imagem Docker"
+    runs-on: ubuntu-latest
+    needs: test   # ← Dependência explícita: Docker só roda se testes passarem
+
+    steps:
+      # 1. Checkout ---------------------------------------------------------
+      - name: "📥 Checkout do repositório"
+        uses: actions/checkout@v4
+
+      # 2. Baixa o artefato do modelo gerado no Job anterior ----------------
+      #    Garante que a imagem Docker contenha o modelo recém-treinado
+      - name: "📥 Baixar artefato do modelo"
+        uses: actions/download-artifact@v4
+        with:
+          name: "churn-model-${{ github.sha }}"
+          path: models/
+
+      # 3. Configurar Docker Buildx (para builds multi-plataforma) ----------
+      - name: "🔧 Configurar Docker Buildx"
+        uses: docker/setup-buildx-action@v3
+
+      # 4. Build da imagem Docker -------------------------------------------
+      - name: "🐳 Build da imagem Docker"
+        run: |
+          echo "Construindo imagem: ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}"
+          docker build \
+            --tag ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} \
+            --tag ${{ env.DOCKER_IMAGE_NAME }}:latest \
+            --label "git-commit=${{ github.sha }}" \
+            --label "build-date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+            .
+          echo "✅ Build concluído"
+          docker images | grep ${{ env.DOCKER_IMAGE_NAME }}
+
+      # 5. Teste de fumaça (smoke test) da imagem ---------------------------
+      #    Inicia o container, aguarda o health check e faz uma requisição
+      #    de inferência para verificar que a API responde corretamente.
+      - name: "🔥 Smoke test do container"
+        run: |
+          echo "Iniciando container em background..."
+          docker run -d \
+            --name churn-api-test \
+            -p 8000:8000 \
+            -e MODEL_PATH=models/model.pkl \
+            ${{ env.DOCKER_IMAGE_NAME }}:latest
+
+          echo "Aguardando container inicializar (15s)..."
+          sleep 15
+
+          echo "Verificando health check..."
+          curl -f http://localhost:8000/health \
+            && echo "✅ Health check passou" \
+            || (docker logs churn-api-test && exit 1)
+
+          echo "Testando endpoint de inferência..."
+          curl -s -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{
+              "tenure_months": 6,
+              "monthly_charges": 250.00,
+              "total_charges": 1500.00,
+              "num_products": 1,
+              "support_calls": 8,
+              "payment_delay_days": 15,
+              "age": 28,
+              "satisfaction_score": 3.5
+            }' | python -m json.tool
+
+          echo "✅ Smoke test do container passou!"
+          docker stop churn-api-test
+          docker rm churn-api-test
+
+      # 6. Inspecionar tamanho da imagem ------------------------------------
+      - name: "📊 Relatório da imagem Docker"
+        run: |
+          echo "=== TAMANHO DA IMAGEM ==="
+          docker images ${{ env.DOCKER_IMAGE_NAME }}:latest \
+            --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+          echo ""
+          echo "=== LAYERS DA IMAGEM ==="
+          docker history ${{ env.DOCKER_IMAGE_NAME }}:latest \
+            --format "table {{.CreatedBy}}\t{{.Size}}" | head -20
+
+      # ── OPCIONAL: Push para Docker Hub (descomente e configure secrets) ──
+      # - name: "🚀 Login no Docker Hub"
+      #   if: github.ref == 'refs/heads/main'
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      #
+      # - name: "🚀 Push da imagem para Docker Hub"
+      #   if: github.ref == 'refs/heads/main'
+      #   run: |
+      #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+      #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
