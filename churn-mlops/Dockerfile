@@ -70,6 +70,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 # --- Copia o código-fonte e os artefatos ---------------------------------
 # Copiado APÓS a instalação das deps para aproveitar o cache do Docker
 COPY app/app.py app/app.py
+COPY app/rag.py app/rag.py
 COPY models/      models/
 
 # --- Usuário não-root (segurança) ----------------------------------------

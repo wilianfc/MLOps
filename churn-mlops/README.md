@@ -15,7 +15,8 @@
 6. [Como Executar Localmente](#6-como-executar-localmente)
 7. [Clusterização — Segmentação de Clientes](#7-clusterização--segmentação-de-clientes)
 8. [Variante AWS — Glue + SageMaker](#8-variante-aws--glue--sagemaker)
-9. [Referências e Conceitos-chave](#9-referências-e-conceitos-chave)
+9. [Diagrama CRISP-DM — BPMN](#9-diagrama-crisp-dm--bpmn)
+10. [Referências e Conceitos-chave](#10-referências-e-conceitos-chave)
 
 ---
 
@@ -31,7 +32,8 @@ churn-mlops/
 │       └── ci.yml              ← Pipeline de CI/CD (GitHub Actions)
 │
 ├── app/
-│   └── app.py                  ← API de inferência (FastAPI)
+│   ├── app.py                  ← API de inferência (FastAPI)
+│   └── rag.py                  ← Motor de busca semântica (RAG — TF-IDF / FAISS)
 │
 ├── models/                     ← Repositório de artefatos (gerados pelo treino)
 │   ├── model.pkl               ← Pipeline scikit-learn serializado
@@ -209,7 +211,8 @@ curl -s -X POST http://localhost:8000/predict \
 |--------|----------|-----------|
 | `GET`  | `/health` | Liveness/Readiness probe (Kubernetes) |
 | `GET`  | `/metrics` | Metadados e versão do modelo |
-| `POST` | `/predict` | Inferência de churn |
+| `POST` | `/predict` | Inferência de churn (+ cluster + perfil RAG) |
+| `POST` | `/rag/query` | Busca semântica sobre perfis de cluster |
 | `GET`  | `/docs` | Documentação Swagger automática |
 
 ---
@@ -341,9 +344,10 @@ pip install -r requirements.txt
 # 4. Treinar o modelo
 python train.py
 
-# 4b. (Opcional) Gerar segmentação de clientes
+# 4b. (Opcional) Gerar segmentação de clientes e perfis RAG
 python clustering_analysis.py
-# Gera: models/cluster_report.json, elbow_curve.png, silhouette_plot.png, pca_clusters.png
+# Gera: models/cluster_report.json, cluster_artifacts.pkl, profile_cards.json,
+#        elbow_curve.png, silhouette_plot.png, pca_clusters.png
 
 # 5. Executar os testes
 pytest tests/ -v

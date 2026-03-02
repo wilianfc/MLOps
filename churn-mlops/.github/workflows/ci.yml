@@ -95,7 +95,7 @@ jobs:
       - name: "🔍 Verificar qualidade do código (ruff)"
         run: |
           pip install ruff
-          ruff check train.py clustering_analysis.py app/app.py tests/ --ignore E501,E402
+          ruff check train.py clustering_analysis.py app/app.py app/rag.py tests/ --ignore E501,E402
         continue-on-error: true  # Não bloqueia o pipeline durante o estudo
 
       # 5. Treinar o modelo -------------------------------------------------
@@ -145,6 +145,8 @@ jobs:
             models/model.pkl
             models/metadata.json
             models/cluster_report.json
+            models/cluster_artifacts.pkl
+            models/profile_cards.json
             models/elbow_curve.png
             models/silhouette_plot.png
             models/pca_clusters.png

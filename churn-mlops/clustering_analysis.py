@@ -25,6 +25,7 @@ COMO RODAR:
 import os
 import json
 import logging
+import pickle
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -64,6 +65,10 @@ RANDOM_STATE = 42
 K_RANGE      = range(2, 9)
 CHOSEN_K     = 2        # Alterado após inspeção do Elbow + Silhouette
 OUTPUT_DIR   = "models"
+
+# Artefatos exportados para a API
+CLUSTER_ARTIFACTS_PATH = os.path.join(OUTPUT_DIR, "cluster_artifacts.pkl")
+PROFILE_CARDS_PATH     = os.path.join(OUTPUT_DIR, "profile_cards.json")
 
 FEATURE_NAMES = [
     "tenure_months",
@@ -112,7 +117,20 @@ def generate_data(n_samples: int = 2000) -> pd.DataFrame:
     })
 
     df = pd.concat([perfil_baixo, perfil_alto]).sample(frac=1, random_state=RANDOM_STATE).reset_index(drop=True)
-    logger.info("Dataset gerado: %d amostras | Churn: %.1f%%", len(df), df["churn"].mean() * 100)
+
+    # ── Segmentação PF / PJ ────────────────────────────────────────────────
+    # PJ (Pessoa Jurídica): cobrança > R$250 E ≥ 3 produtos → perfil empresa
+    # PF (Pessoa Física): demais clientes → perfil individual
+    df["segmento"] = np.where(
+        (df["monthly_charges"] > 250) & (df["num_products"] >= 3),
+        "PJ", "PF"
+    )
+
+    pf_pct = (df["segmento"] == "PF").mean() * 100
+    logger.info(
+        "Dataset gerado: %d amostras | Churn: %.1f%% | PF: %.1f%% | PJ: %.1f%%",
+        len(df), df["churn"].mean() * 100, pf_pct, 100 - pf_pct,
+    )
     return df
 
 
@@ -368,7 +386,149 @@ def profile_clusters(df_original: pd.DataFrame, labels: np.ndarray, features: li
 
 
 # ---------------------------------------------------------------------------
-# 7. Salva relatório JSON consolidado
+# 7. Perfis de Cluster enriquecidos para RAG — profile_cards.json
+# ---------------------------------------------------------------------------
+def generate_profile_cards(df: pd.DataFrame, labels: np.ndarray, features: list) -> dict:
+    """
+    Gera profile_cards.json com perfis descritivos por segmento (PF/PJ) e cluster.
+
+    Estrutura:
+        {
+          "PF": { "cluster_0": { perfil_label, risk_level, description, ... } },
+          "PJ": { "cluster_0": { ... } }
+        }
+
+    O campo 'description' é texto livre usado pelo módulo RAG para
+    busca por similaridade semântica (TF-IDF / FAISS).
+    """
+    df = df.copy()
+    df["_cluster"] = labels
+    seg_col = "segmento" if "segmento" in df.columns else None
+    segmentos = ["PF", "PJ"] if seg_col else ["ALL"]
+
+    cards: dict = {}
+
+    for seg in segmentos:
+        seg_df = df[df[seg_col] == seg] if seg_col else df
+        cards[seg] = {}
+
+        for cid in sorted(seg_df["_cluster"].unique()):
+            subset = seg_df[seg_df["_cluster"] == cid]
+            churn_rate   = float(subset["churn"].mean())
+            risk_level   = "ALTO RISCO" if churn_rate >= 0.5 else "BAIXO RISCO"
+            cobertura    = round(len(subset) / len(seg_df) * 100, 1)
+            means        = {f: round(float(subset[f].mean()), 3) for f in features}
+
+            # Rótulo e descrição gerados a partir das estatísticas do cluster
+            if risk_level == "BAIXO RISCO":
+                perfil_label = f"{seg} Estável – Baixo Risco"
+                description = (
+                    f"Clientes {seg} com longa permanência ({means['tenure_months']:.0f} meses em média), "
+                    f"alta satisfação ({means['satisfaction_score']:.1f}/10) e baixo volume de chamados "
+                    f"({means['support_calls']:.1f}). Pagamentos em dia (atraso médio: "
+                    f"{means['payment_delay_days']:.0f} dias). Tendem a renovar contratos espontaneamente."
+                )
+                action = (
+                    "Oferecer programa de fidelidade, cross-sell de produtos premium e "
+                    "upgrades de plano para maximizar LTV. Evitar contato comercial agressivo."
+                )
+                gargalos = ["Sem gargalos críticos identificados"]
+            else:
+                perfil_label = f"{seg} Em Risco – Alto Risco"
+                description = (
+                    f"Clientes {seg} recentes ({means['tenure_months']:.0f} meses em média), "
+                    f"com cobrança mensal elevada (R$ {means['monthly_charges']:.0f}), "
+                    f"baixa satisfação ({means['satisfaction_score']:.1f}/10) e alto volume de chamados "
+                    f"({means['support_calls']:.1f}). Atraso médio de {means['payment_delay_days']:.0f} dias. "
+                    f"Alta probabilidade de cancelamento."
+                )
+                action = (
+                    "Acionar equipe de retenção imediatamente. Oferecer desconto de fidelidade, "
+                    "resolver ticket de suporte pendente e agendar pesquisa de satisfação. "
+                    "Monitorar NPS semanal."
+                )
+                gargalos = [
+                    f"BU_WAIT_DAYS > {means['payment_delay_days']:.0f}d" if means["payment_delay_days"] > 5 else "",
+                    f"ACCESS_SLA_DAYS alto" if means["support_calls"] > 5 else "",
+                ]
+                gargalos = [g for g in gargalos if g]
+
+            rag_tags = [
+                seg.lower(),
+                risk_level.lower().replace(" ", "_"),
+                f"cluster_{cid}",
+                "alta_satisfacao" if means["satisfaction_score"] >= 7 else "baixa_satisfacao",
+                "longa_permanencia" if means["tenure_months"] >= 24 else "cliente_novo",
+            ]
+
+            cards[seg][f"cluster_{cid}"] = {
+                "cluster_id":            int(cid),
+                "segmento":              seg,
+                "perfil_label":          perfil_label,
+                "risk_level":            risk_level,
+                "churn_rate":            round(churn_rate, 4),
+                "cobertura_pct":         cobertura,
+                "n_amostras":            int(len(subset)),
+                "description":           description,
+                "feature_means":         means,
+                "action_recommendation": action,
+                "gargalos":              gargalos,
+                "rag_tags":              rag_tags,
+            }
+
+            logger.info(
+                "  [%s] Cluster %d — %s | Churn: %.1f%% | N=%d",
+                seg, cid, perfil_label, churn_rate * 100, len(subset),
+            )
+
+    return cards
+
+
+# ---------------------------------------------------------------------------
+# 8. Salva artefatos para uso na API (scaler + KMeans + profile_cards)
+# ---------------------------------------------------------------------------
+def save_cluster_artifacts(
+    scaler,
+    kmeans,
+    profile_cards: dict,
+    artifacts_path: str = CLUSTER_ARTIFACTS_PATH,
+    cards_path: str = PROFILE_CARDS_PATH,
+) -> None:
+    """
+    Persiste em disco os artefatos necessários para inferência na API:
+
+    cluster_artifacts.pkl  — dict com scaler e kmeans já treinados
+        {
+          "scaler":        StandardScaler (fitted),
+          "kmeans":        KMeans (fitted),
+          "chosen_k":      int,
+          "feature_names": list[str],
+        }
+
+    profile_cards.json  — perfis descritivos PF/PJ para o módulo RAG
+
+    Esses artefatos são carregados pelo lifespan do FastAPI no startup.
+    """
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    artifacts = {
+        "scaler":        scaler,
+        "kmeans":        kmeans,
+        "chosen_k":      kmeans.n_clusters,
+        "feature_names": FEATURE_NAMES,
+    }
+
+    with open(artifacts_path, "wb") as f:
+        pickle.dump(artifacts, f)
+    logger.info("Artefatos de cluster salvos: %s", artifacts_path)
+
+    with open(cards_path, "w", encoding="utf-8") as f:
+        json.dump(profile_cards, f, indent=2, ensure_ascii=False)
+    logger.info("Profile cards salvos: %s", cards_path)
+
+
+# ---------------------------------------------------------------------------
+# 8→9. Salva relatório JSON consolidado (renumerado)
 # ---------------------------------------------------------------------------
 def save_report(metrics: dict, profiles: dict, inertias: dict, chosen_k: int) -> str:
     """
@@ -445,11 +605,20 @@ def main():
     # 9. Relatório JSON
     report_path = save_report(metrics, profiles, inertias, CHOSEN_K)
 
+    # 10. Profile Cards PF/PJ para RAG
+    logger.info("Gerando profile cards (PF/PJ) para o módulo RAG...")
+    profile_cards = generate_profile_cards(df, labels, FEATURE_NAMES)
+
+    # 11. Artefatos de cluster para a API (cluster_artifacts.pkl + profile_cards.json)
+    save_cluster_artifacts(scaler, kmeans, profile_cards)
+
     logger.info("Clusterização concluída! Arquivos gerados:")
     logger.info("  - %s", os.path.join(OUTPUT_DIR, "elbow_curve.png"))
     logger.info("  - %s", os.path.join(OUTPUT_DIR, "silhouette_plot.png"))
     logger.info("  - %s", os.path.join(OUTPUT_DIR, "pca_clusters.png"))
     logger.info("  - %s", report_path)
+    logger.info("  - %s", CLUSTER_ARTIFACTS_PATH)
+    logger.info("  - %s", PROFILE_CARDS_PATH)
 
 
 if __name__ == "__main__":

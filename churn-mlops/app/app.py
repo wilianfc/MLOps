@@ -31,15 +31,22 @@ import os
 import json
 import logging
 import pickle
+import sys
 import time
 from contextlib import asynccontextmanager
-from typing import Optional
+from typing import Literal, Optional
 
 import numpy as np
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, field_validator
+
+# Módulo RAG — compatível com `uvicorn app.app:app` e execução local
+try:
+    from app.rag import get_engine as _get_rag_engine
+except ImportError:
+    from rag import get_engine as _get_rag_engine  # type: ignore[no-redef]
 
 # ---------------------------------------------------------------------------
 # Configuração de Logging
@@ -54,17 +61,21 @@ logger = logging.getLogger("churn_api")
 # ---------------------------------------------------------------------------
 # Caminhos dos artefatos (relativos ao container ou ambiente local)
 # ---------------------------------------------------------------------------
-MODEL_PATH = os.environ.get("MODEL_PATH", "models/model.pkl")
-METADATA_PATH = os.environ.get("METADATA_PATH", "models/metadata.json")
+MODEL_PATH             = os.environ.get("MODEL_PATH",             "models/model.pkl")
+METADATA_PATH          = os.environ.get("METADATA_PATH",          "models/metadata.json")
+CLUSTER_ARTIFACTS_PATH = os.environ.get("CLUSTER_ARTIFACTS_PATH", "models/cluster_artifacts.pkl")
+PROFILE_CARDS_PATH     = os.environ.get("PROFILE_CARDS_PATH",     "models/profile_cards.json")
 
 # ---------------------------------------------------------------------------
 # Estado global da aplicação — carregado no startup
 # ---------------------------------------------------------------------------
 app_state: dict = {
-    "pipeline": None,
-    "metadata": {},
-    "request_count": 0,
-    "startup_time": None,
+    "pipeline":          None,
+    "metadata":          {},
+    "cluster_artifacts": None,   # {scaler, kmeans, chosen_k, feature_names}
+    "rag_engine":        None,   # RAGEngine com índice TF-IDF / FAISS
+    "request_count":     0,
+    "startup_time":      None,
 }
 
 
@@ -111,6 +122,31 @@ async def lifespan(app: FastAPI):
     app_state["request_count"] = 0
     logger.info("API pronta! Tempo de startup: %.2fs", app_state["startup_time"])
 
+    # Carrega artefatos de cluster (scaler + KMeans) — opcional
+    if os.path.exists(CLUSTER_ARTIFACTS_PATH):
+        with open(CLUSTER_ARTIFACTS_PATH, "rb") as f:
+            app_state["cluster_artifacts"] = pickle.load(f)
+        k = app_state["cluster_artifacts"].get("chosen_k", "?")
+        logger.info("Artefatos de cluster carregados: K=%s", k)
+    else:
+        logger.warning(
+            "cluster_artifacts.pkl não encontrado em '%s'. "
+            "Execute clustering_analysis.py para gerar.",
+            CLUSTER_ARTIFACTS_PATH,
+        )
+
+    # Inicializa motor RAG com índice sobre profile_cards — opcional
+    rag_engine = _get_rag_engine(profile_cards_path=PROFILE_CARDS_PATH)
+    app_state["rag_engine"] = rag_engine
+    if rag_engine.is_loaded:
+        logger.info(
+            "RAG Engine pronto | backend=%s | perfis=%d",
+            rag_engine.backend,
+            len(rag_engine._documents),
+        )
+    else:
+        logger.warning("RAG Engine não carregado (profile_cards.json ausente).")
+
     yield  # ← A aplicação fica ativa aqui
 
     # ── SHUTDOWN ─────────────────────────────────────────────────────────
@@ -140,7 +176,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],   # Em produção: substitua por domínios específicos
-    allow_credentials=True,
+    allow_credentials=False,  # False é obrigatório com allow_origins=["*"] (spec CORS)
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
@@ -220,6 +256,11 @@ class CustomerFeatures(BaseModel):
         description="Pontuação de satisfação do cliente (0–10).",
         example=6.5,
     )
+    segmento: Literal["PF", "PJ"] = Field(
+        default="PF",
+        description="Segmento do cliente: PF (Pessoa Física) ou PJ (Pessoa Jurídica).",
+        example="PF",
+    )
 
     @field_validator("satisfaction_score")
     @classmethod
@@ -230,14 +271,15 @@ class CustomerFeatures(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "tenure_months": 12,
-                "monthly_charges": 199.90,
-                "total_charges": 2398.80,
-                "num_products": 2,
-                "support_calls": 3,
+                "tenure_months":      12,
+                "monthly_charges":    199.90,
+                "total_charges":      2398.80,
+                "num_products":       2,
+                "support_calls":      3,
                 "payment_delay_days": 5,
-                "age": 35,
+                "age":                35,
                 "satisfaction_score": 6.5,
+                "segmento":           "PF",
             }
         }
     }
@@ -257,6 +299,16 @@ class PredictionResponse(BaseModel):
     )
     model_version: Optional[str] = Field(
         None, description="Identificador de versão do modelo."
+    )
+    # — Campos de segmentação (Fase 9 CRISP-DM / aws_deploy_pipeline) —
+    cluster_id: Optional[int] = Field(
+        None, description="ID do cluster atribuído pelo KMeans (0-based)."
+    )
+    perfil_label: Optional[str] = Field(
+        None, description="Rótulo de negócio do cluster (ex: 'PF Estável – Baixo Risco')."
+    )
+    segmento: Optional[str] = Field(
+        None, description="Segmento do cliente: PF ou PJ."
     )
 
 
@@ -378,11 +430,35 @@ async def predict_churn(customer: CustomerFeatures):
 
         model_version = app_state["metadata"].get("trained_at", "unknown")
 
+        # ── Enriquece com segmentação de cluster ────────────────────────
+        cluster_id   = None
+        perfil_label = None
+        segmento_out = customer.segmento
+
+        cluster_artifacts = app_state.get("cluster_artifacts")
+        if cluster_artifacts:
+            try:
+                scaler    = cluster_artifacts["scaler"]
+                kmeans    = cluster_artifacts["kmeans"]
+                X_cluster = scaler.transform(X)
+                cluster_id = int(kmeans.predict(X_cluster)[0])
+
+                rag_engine = app_state.get("rag_engine")
+                if rag_engine and rag_engine.is_loaded:
+                    profile = rag_engine.get_profile(segmento_out, cluster_id)
+                    if profile:
+                        perfil_label = profile.get("perfil_label")
+            except Exception as cex:
+                logger.warning("Erro ao atribuir cluster: %s", cex)
+
         return PredictionResponse(
-            churn_prediction=churn_label,
-            churn_probability=round(churn_proba, 4),
-            risk_level=risk_level,
-            model_version=model_version,
+            churn_prediction  = churn_label,
+            churn_probability = round(churn_proba, 4),
+            risk_level        = risk_level,
+            model_version     = model_version,
+            cluster_id        = cluster_id,
+            perfil_label      = perfil_label,
+            segmento          = segmento_out,
         )
 
     except Exception as exc:
@@ -398,9 +474,98 @@ async def root():
     """Redireciona para a documentação Swagger."""
     return JSONResponse(
         content={
-            "message": "Churn Prediction API v1.0.0",
-            "docs": "/docs",
-            "health": "/health",
-            "predict": "POST /predict",
+            "message":   "Churn Prediction API v1.0.0",
+            "docs":      "/docs",
+            "health":    "/health",
+            "predict":   "POST /predict",
+            "rag_query": "POST /rag/query",
         }
+    )
+
+
+# ---------------------------------------------------------------------------
+# Schemas RAG
+# ---------------------------------------------------------------------------
+
+class RAGQueryRequest(BaseModel):
+    """Payload do endpoint POST /rag/query."""
+
+    query: str = Field(
+        ...,
+        min_length=3,
+        max_length=500,
+        description="Pergunta ou descrição do cliente para busca semântica.",
+        example="cliente PF insatisfeito com suporte, alto risco de churn",
+    )
+    segmento: Optional[Literal["PF", "PJ"]] = Field(
+        None,
+        description="Filtrar resultados por segmento. Se omitido, busca em PF e PJ.",
+        example="PF",
+    )
+    top_k: int = Field(
+        default=3,
+        ge=1,
+        le=10,
+        description="Número máximo de perfis retornados.",
+    )
+
+
+class RAGQueryResponse(BaseModel):
+    """Resposta do endpoint POST /rag/query."""
+
+    query:          str
+    segmento_filtro: Optional[str]
+    backend:        str
+    n_resultados:   int
+    resultados: list[dict]
+
+
+# ---------------------------------------------------------------------------
+# ENDPOINT — POST /rag/query
+# ---------------------------------------------------------------------------
+
+@app.post(
+    "/rag/query",
+    response_model=RAGQueryResponse,
+    tags=["RAG"],
+    summary="Consulta semântica sobre perfis de cluster (RAG)",
+    status_code=200,
+)
+async def rag_query(request: RAGQueryRequest):
+    """
+    Recupera os perfis de cluster mais relevantes para a consulta informada.
+
+    **Fluxo interno (Fase 9 CRISP-DM):**
+    1. A query é transformada em vetor TF-IDF (ou dense embedding via FAISS).
+    2. Cosine similarity identifica os perfis mais próximos semanticamente.
+    3. Os top-k perfis são retornados com score de relevância.
+
+    **Uso típico:**
+    - Enriquecer respostas de chatbot de retenção com contexto do perfil.
+    - Auditar quais perfis de churn são mais comuns em um período.
+    - Alimentar workflows de CRM com recomendações personalizadas.
+    """
+    rag_engine = app_state.get("rag_engine")
+
+    if rag_engine is None or not rag_engine.is_loaded:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Motor RAG não disponível. "
+                "Execute clustering_analysis.py para gerar models/profile_cards.json."
+            ),
+        )
+
+    results = rag_engine.query(
+        question=request.query,
+        segmento=request.segmento,
+        top_k=request.top_k,
+    )
+
+    return RAGQueryResponse(
+        query=request.query,
+        segmento_filtro=request.segmento,
+        backend=rag_engine.backend,
+        n_resultados=len(results),
+        resultados=results,
     )
