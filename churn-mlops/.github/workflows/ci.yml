@@ -95,7 +95,7 @@ jobs:
       - name: "🔍 Verificar qualidade do código (ruff)"
         run: |
           pip install ruff
-          ruff check train.py app/app.py tests/ --ignore E501,E402
+          ruff check train.py clustering_analysis.py app/app.py tests/ --ignore E501,E402
         continue-on-error: true  # Não bloqueia o pipeline durante o estudo
 
       # 5. Treinar o modelo -------------------------------------------------
@@ -119,6 +119,15 @@ jobs:
           fi
           echo "✅ Artefato validado: $(du -h ${{ env.MODEL_PATH }})"
 
+      # 6b. Clusterização — segmentação não supervisionada -------------------
+      #     Gera cluster_report.json, gráficos e valida as métricas dos clusters.
+      #     Executa APÓS o treino para que o mesmo dataset esteja disponível.
+      - name: "🔍 Executar análise de clusterização"
+        run: |
+          python clustering_analysis.py
+          echo "Artefatos de clusterização gerados:"
+          ls -lh models/*.json models/*.png 2>/dev/null || echo "Nenhum arquivo extra encontrado"
+
       # 7. Executar testes automatizados ------------------------------------
       - name: "🧪 Executar testes de validação"
         run: |
@@ -135,6 +144,10 @@ jobs:
           path: |
             models/model.pkl
             models/metadata.json
+            models/cluster_report.json
+            models/elbow_curve.png
+            models/silhouette_plot.png
+            models/pca_clusters.png
           retention-days: 30   # Mantém por 30 dias para auditoria
           if-no-files-found: error
 

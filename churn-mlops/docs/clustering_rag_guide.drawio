@@ -1,0 +1,579 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2">
+  <diagram defaultStyle="fontFamily=Arial;fontSize=12;" name="Clustering RAG Guide" id="clustering_rag_guide">
+    <mxGraphModel dx="1603" dy="963" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3800" pageHeight="2600" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=18;fontStyle=1;fontColor=#0f172a;" value="GUIA: PIPELINE DE CLUSTERING → RAG POR PERFIL DE CLIENTE (PF e PJ)" vertex="1">
+          <mxGeometry height="40" width="2000" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lane0_bg" parent="1" style="rounded=1;arcSize=10;fillColor=#f3f4f6;strokeColor=#cbd5e1;opacity=40;" value="" vertex="1">
+          <mxGeometry height="230" width="2030" x="40" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="lane0_lbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;fontStyle=1;fontColor=#334155;" value="⓪ METRICAS DE RASTREABILIDADE" vertex="1">
+          <mxGeometry height="20" width="280" x="55" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_bu_wait" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=9;" value="⏳ BU_WAIT_DAYS&#xa;━━━━━━━━━━━━━&#xa;Dias aguardando&#xa;agenda de negócio&#xa;🔴 Alerta: &gt; 15d" vertex="1">
+          <mxGeometry height="90" width="160" x="55" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_data_comp" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=9;" value="📊 DATA_COMPLETENESS&#xa;━━━━━━━━━━━━━━━━━━━&#xa;% campos não-nulos&#xa;PF / PJ separados&#xa;🔴 Alerta: &lt; 60%" vertex="1">
+          <mxGeometry height="90" width="160" x="235" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_access_sla" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=9;" value="🔑 ACCESS_SLA_DAYS&#xa;━━━━━━━━━━━━━━━━━━&#xa;Dias ticket acesso&#xa;até liberação real&#xa;🔴 Alerta: &gt; 10d" vertex="1">
+          <mxGeometry height="90" width="160" x="415" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_iter" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=9;" value="🔁 ITERATION_COUNT&#xa;━━━━━━━━━━━━━━━━━━&#xa;Rodadas clustering&#xa;até aprovação&#xa;🔴 Alerta: &gt; 10x" vertex="1">
+          <mxGeometry height="90" width="160" x="595" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_sil" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=9;" value="📐 SILHOUETTE_SCORE&#xa;━━━━━━━━━━━━━━━━━━━&#xa;Coesão / separação&#xa;PF e PJ [-1, 1]&#xa;🟢 Meta: ≥ 0.40" vertex="1">
+          <mxGeometry height="90" width="160" x="775" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_stab" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=9;" value="🔒 CLUSTER_STABILITY&#xa;━━━━━━━━━━━━━━━━━━━&#xa;ARI bootstrap 80%&#xa;10 execuções&#xa;🟢 Meta: ≥ 0.85" vertex="1">
+          <mxGeometry height="90" width="160" x="55" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_cov" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=9;" value="👥 PROFILE_COVERAGE&#xa;━━━━━━━━━━━━━━━━━━━&#xa;% clientes atribuídos&#xa;a algum cluster&#xa;🟢 Meta: ≥ 95%" vertex="1">
+          <mxGeometry height="90" width="160" x="235" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_rag_qual" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=9;" value="📝 RAG_DOC_QUALITY&#xa;━━━━━━━━━━━━━━━━━━&#xa;Score humano doc&#xa;por perfil [1-5]&#xa;🟢 Meta: ≥ 4.0/5" vertex="1">
+          <mxGeometry height="90" width="160" x="415" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_ttm" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=9;" value="⏱️ TIME_TO_MODEL&#xa;━━━━━━━━━━━━━━━━&#xa;Dias kick-off até&#xa;1o cluster aprovado&#xa;🟢 Meta: ≤ 30d" vertex="1">
+          <mxGeometry height="90" width="160" x="595" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="mc_recall" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=9;" value="🔍 PROMPT_RETRIEVAL&#xa;━━━━━━━━━━━━━━━━━━━&#xa;Recall@5 por perfil&#xa;benchmark interno&#xa;🟢 Meta: ≥ 0.80" vertex="1">
+          <mxGeometry height="90" width="160" x="775" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="lane1_bg" parent="1" style="rounded=1;arcSize=10;fillColor=#fee2e2;strokeColor=#ef4444;opacity=25;" value="" vertex="1">
+          <mxGeometry height="315" width="2030" x="40" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="lane1_lbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;fontStyle=1;fontColor=#b91c1c;rotation=-90;align=center;" value="① BU" vertex="1">
+          <mxGeometry height="90" width="20" x="50" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="bu_start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontStyle=1;" value="▶ Início&#xa;do Projeto" vertex="1">
+          <mxGeometry height="60" width="100" x="85" y="393" as="geometry" />
+        </mxCell>
+        <mxCell id="bu_kickoff" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;" value="Kick-off BU&#xa;Definir escopo&#xa;PF / PJ e&#xa;objetivo RAG" vertex="1">
+          <mxGeometry height="70" width="140" x="245" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="bn1_box" parent="1" style="text;html=1;strokeColor=#ef4444;fillColor=#fef2f2;rounded=1;arcSize=10;fontSize=10;fontStyle=1;fontColor=#b91c1c;verticalAlign=top;" value="⚠️ GARGALO #1" vertex="1">
+          <mxGeometry height="280" width="340" x="440" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="bu_agenda" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;" value="📅 Agenda&#xa;Stakeholders&#xa;(demora em&#xa;agendar reunião)" vertex="1">
+          <mxGeometry height="72" width="145" x="455" y="358" as="geometry" />
+        </mxCell>
+        <mxCell id="bu_access_ticket" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;" value="🎫 Ticket de&#xa;Acesso a Dados&#xa;(abrir no&#xa;kick-off)" vertex="1">
+          <mxGeometry height="72" width="145" x="620" y="358" as="geometry" />
+        </mxCell>
+        <mxCell id="bn1_tip" parent="1" style="text;html=1;strokeColor=none;fillColor=#fff7ed;rounded=1;arcSize=10;fontSize=9;fontStyle=2;fontColor=#c2410c;" value="💡 Mitigação: agendar 1 semana antes + abrir ticket no kick-off" vertex="1">
+          <mxGeometry height="40" width="305" x="455" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="bn1_wait_gate" parent="1" style="rhombus;whiteSpace=wrap;html=1;arcSize=10;strokeWidth=1.5;arcSize=10;strokeWidth=1.5;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;" value="Dados&#xa;Liberados?" vertex="1">
+          <mxGeometry height="95" width="139" x="513" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="bu_pf_scope" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;" value="Escopo PF&#xa;Perguntas-guia&#xa;Features previstas&#xa;Objetivo RAG PF" vertex="1">
+          <mxGeometry height="75" width="145" x="850" y="348" as="geometry" />
+        </mxCell>
+        <mxCell id="bu_pj_scope" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;" value="Escopo PJ&#xa;Perguntas-guia&#xa;Features previstas&#xa;Objetivo RAG PJ" vertex="1">
+          <mxGeometry height="75" width="145" x="850" y="458" as="geometry" />
+        </mxCell>
+        <mxCell id="bu_rag_questions" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;" value="Perguntas-guia&#xa;para RAG&#xa;(lista mínima&#xa;por perfil)" vertex="1">
+          <mxGeometry height="70" width="145" x="1065" y="393" as="geometry" />
+        </mxCell>
+        <mxCell id="bu_success" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontStyle=1;" value="✅ BU&#xa;Concluído" vertex="1">
+          <mxGeometry height="60" width="130" x="1275" y="398" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bu1" edge="1" parent="1" source="bu_start" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bu_kickoff">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bu2" edge="1" parent="1" source="bu_kickoff" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bu_agenda">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bu3" edge="1" parent="1" source="bu_kickoff" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bu_access_ticket">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bu4" edge="1" parent="1" source="bu_agenda" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bn1_wait_gate">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="527" y="430" />
+              <mxPoint x="527" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_bu5" edge="1" parent="1" source="bu_access_ticket" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bn1_wait_gate">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="692" y="430" />
+              <mxPoint x="652" y="430" />
+              <mxPoint x="652" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_bu_gate_ok" edge="1" parent="1" source="bn1_wait_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;fontStyle=1;fontSize=9;" target="bu_pf_scope" value="Sim">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="543" />
+              <mxPoint x="800" y="386" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_bu_pj" edge="1" parent="1" source="bn1_wait_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bu_pj_scope">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="910" y="543" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_bu6" edge="1" parent="1" source="bu_pf_scope" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bu_rag_questions">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1065" y="385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_bu7" edge="1" parent="1" source="bu_pj_scope" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bu_rag_questions">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1065" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_bu8" edge="1" parent="1" source="bu_rag_questions" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="bu_success">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lane2_bg" parent="1" style="rounded=1;arcSize=10;fillColor=#fef9c3;strokeColor=#eab308;opacity=30;" value="" vertex="1">
+          <mxGeometry height="340" width="2030" x="40" y="645" as="geometry" />
+        </mxCell>
+        <mxCell id="lane2_lbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;fontStyle=1;fontColor=#a16207;rotation=-90;align=center;" value="② DADOS" vertex="1">
+          <mxGeometry height="80" width="20" x="50" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="bn2_box" parent="1" style="text;html=1;strokeColor=#eab308;fillColor=#fefce8;rounded=1;arcSize=10;fontSize=10;fontStyle=1;fontColor=#a16207;verticalAlign=top;" value="⚠️ GARGALO #2" vertex="1">
+          <mxGeometry height="305" width="345" x="80" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="da_ticket_status" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;" value="📋 Status do&#xa;Ticket de Acesso&#xa;(aberto no kick-off&#xa;— monitorar SLA)" vertex="1">
+          <mxGeometry height="72" width="155" x="95" y="685" as="geometry" />
+        </mxCell>
+        <mxCell id="da_access_gate" parent="1" style="rhombus;whiteSpace=wrap;html=1;arcSize=10;strokeWidth=1.5;arcSize=10;strokeWidth=1.5;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;" value="Acesso&#xa;Concedido?" vertex="1">
+          <mxGeometry height="85" width="130" x="100" y="832" as="geometry" />
+        </mxCell>
+        <mxCell id="da_proxy" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;" value="🔄 Dados Proxy&#xa;/ Sintéticos&#xa;(desbloquear&#xa;iteração)" vertex="1">
+          <mxGeometry height="70" width="155" x="252" y="837" as="geometry" />
+        </mxCell>
+        <mxCell id="bn2_tip" parent="1" style="text;html=1;strokeColor=none;fillColor=#fff7ed;rounded=1;arcSize=10;fontSize=9;fontStyle=2;fontColor=#c2410c;" value="💡 Mitigação: usar dados proxy / sintéticos para não bloquear o pipeline" vertex="1">
+          <mxGeometry height="22" width="325" x="88" y="938" as="geometry" />
+        </mxCell>
+        <mxCell id="da_ingest_pf" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Ingestão PF&#xa;(real ou proxy&#xa;— registrar fonte&#xa;+ data_freshness)" vertex="1">
+          <mxGeometry height="72" width="140" x="485" y="675" as="geometry" />
+        </mxCell>
+        <mxCell id="da_ingest_pj" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;" value="Ingestão PJ&#xa;(real ou proxy&#xa;— registrar fonte&#xa;+ data_freshness)" vertex="1">
+          <mxGeometry height="72" width="140" x="485" y="797" as="geometry" />
+        </mxCell>
+        <mxCell id="da_qual_pf" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Qualidade PF&#xa;DATA_COMPLETENESS&#xa;OUTLIER_RATE&#xa;SCHEMA_DRIFT" vertex="1">
+          <mxGeometry height="77" width="145" x="685" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="da_qual_pj" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;" value="Qualidade PJ&#xa;DATA_COMPLETENESS&#xa;OUTLIER_RATE&#xa;SCHEMA_DRIFT" vertex="1">
+          <mxGeometry height="77" width="145" x="685" y="797" as="geometry" />
+        </mxCell>
+        <mxCell id="da_fe_pf" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Feature Eng. PF&#xa;Normalização,&#xa;Encoding,&#xa;Seleção" vertex="1">
+          <mxGeometry height="82" width="140" x="895" y="665" as="geometry" />
+        </mxCell>
+        <mxCell id="da_fe_pj" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;" value="Feature Eng. PJ&#xa;Normalização,&#xa;Log-transform,&#xa;Seleção" vertex="1">
+          <mxGeometry height="82" width="140" x="895" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="da_quality_gate" parent="1" style="rhombus;whiteSpace=wrap;html=1;arcSize=10;strokeWidth=1.5;arcSize=10;strokeWidth=1.5;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;" value="✅ Quality Gate&#xa;Dados OK?&#xa;(completeness +&#xa;schema + freshness)" vertex="1">
+          <mxGeometry height="100" width="160" x="1105" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="e_da1" edge="1" parent="1" source="da_ticket_status" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="da_access_gate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_da_no" edge="1" parent="1" source="da_access_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#ef4444;fontStyle=1;fontSize=9;" target="da_proxy" value="Não">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_da_yes" edge="1" parent="1" source="da_access_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;fontStyle=1;fontSize=9;" target="da_ingest_pf" value="Sim">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="165" y="780" />
+              <mxPoint x="555" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_da_yes2" edge="1" parent="1" source="da_access_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;" target="da_ingest_pj">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="165" y="930" />
+              <mxPoint x="540" y="930" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_proxy_pf" edge="1" parent="1" source="da_proxy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#ef4444;" target="da_ingest_pf">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="329" y="817" />
+              <mxPoint x="329" y="711" />
+              <mxPoint x="485" y="711" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_proxy_pj" edge="1" parent="1" source="da_proxy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#ef4444;" target="da_ingest_pj">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="446" y="870" />
+              <mxPoint x="446" y="833" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_da2" edge="1" parent="1" source="da_ingest_pf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="da_qual_pf">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_da3" edge="1" parent="1" source="da_ingest_pj" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="da_qual_pj">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_da4" edge="1" parent="1" source="da_qual_pf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="da_fe_pf">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_da5" edge="1" parent="1" source="da_qual_pj" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="da_fe_pj">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_da6" edge="1" parent="1" source="da_fe_pf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="da_quality_gate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_da7" edge="1" parent="1" source="da_fe_pj" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="da_quality_gate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lane3_bg" parent="1" style="rounded=1;arcSize=10;fillColor=#dcfce7;strokeColor=#22c55e;opacity=25;" value="" vertex="1">
+          <mxGeometry height="445" width="2030" x="40" y="995" as="geometry" />
+        </mxCell>
+        <mxCell id="lane3_lbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;fontStyle=1;fontColor=#15803d;rotation=-90;align=center;" value="③ CLUSTERING" vertex="1">
+          <mxGeometry height="100" width="20" x="50" y="1185" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pf_lbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontColor=#15803d;" value="── Pessoa Física (PF) ──" vertex="1">
+          <mxGeometry height="20" width="205" x="80" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pf_scale" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Normalização PF&#xa;Standard/MinMax/&#xa;Robust (conforme&#xa;distribuição)" vertex="1">
+          <mxGeometry height="80" width="140" x="80" y="1025" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pf_k" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Seleção de K PF&#xa;Elbow + Silhouette&#xa;+ Davies-Bouldin&#xa;mede ITERATION_COUNT" vertex="1">
+          <mxGeometry height="85" width="147" x="280" y="1020" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pf_algo" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Algoritmo PF&#xa;K-Means / DBSCAN&#xa;/ Gaussiano / Hier.&#xa;(guia à direita)" vertex="1">
+          <mxGeometry height="85" width="140" x="487" y="1020" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pf_metrics" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Métricas PF&#xa;Silhouette ≥ 0.40&#xa;Davies-Bouldin&lt;1.0&#xa;CH index (relativo)&#xa;mede SILHOUETTE" vertex="1">
+          <mxGeometry height="87" width="150" x="687" y="1018" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pf_stability" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Estabilidade PF&#xa;ARI bootstrap&#xa;80% dataset (10x)&#xa;mede CLUSTER_STABILITY" vertex="1">
+          <mxGeometry height="87" width="152" x="898" y="1018" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pj_lbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontColor=#1d4ed8;" value="── Pessoa Jurídica (PJ) ──" vertex="1">
+          <mxGeometry height="20" width="215" x="80" y="1148" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pj_scale" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;" value="Normalização PJ&#xa;Atenção a outliers&#xa;de faturamento&#xa;(log transform)" vertex="1">
+          <mxGeometry height="80" width="140" x="80" y="1173" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pj_k" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;" value="Seleção de K PJ&#xa;Elbow + Silhouette&#xa;+ BIC/AIC se GMM&#xa;mede ITERATION_COUNT" vertex="1">
+          <mxGeometry height="90" width="147" x="280" y="1168" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pj_algo" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;" value="Algoritmo PJ&#xa;K-Means / Hier.&#xa;/ Bisecting K-Means&#xa;(guia à direita)" vertex="1">
+          <mxGeometry height="90" width="140" x="487" y="1168" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pj_metrics" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;" value="Métricas PJ&#xa;Silhouette ≥ 0.40&#xa;Davies-Bouldin&lt;1.0&#xa;Interpretabilidade&#xa;mede SILHOUETTE" vertex="1">
+          <mxGeometry height="90" width="150" x="687" y="1163" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pj_stability" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;" value="Estabilidade PJ&#xa;ARI bootstrap&#xa;Verificar coerência&#xa;de negócio (PO)" vertex="1">
+          <mxGeometry height="90" width="152" x="898" y="1163" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_gate" parent="1" style="rhombus;whiteSpace=wrap;html=1;arcSize=10;strokeWidth=1.5;arcSize=10;strokeWidth=1.5;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;" value="Clusters OK?&#xa;Silhouette +&#xa;Estabilidade +&#xa;Business Sign-off" vertex="1">
+          <mxGeometry height="112" width="155" x="1115" y="1072" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_reject_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontStyle=2;fontColor=#b91c1c;" value="Não: ajustar features, trocar algoritmo ou rever K&#xa;↺ volta ao início (mede ITERATION_COUNT)" vertex="1">
+          <mxGeometry height="50" width="280" x="1060" y="1210" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_coverage" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Verificar&#xa;PROFILE_COVERAGE&#xa;&gt; 95% de clientes&#xa;atribuídos" vertex="1">
+          <mxGeometry height="84" width="145" x="1340" y="1086" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pca_viz" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Visualizar PCA 2D&#xa;+ t-SNE&#xa;Documentar&#xa;separação visual" vertex="1">
+          <mxGeometry height="84" width="145" x="1550" y="1086" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_pf1" edge="1" parent="1" source="cl_pf_scale" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;" target="cl_pf_k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_pf2" edge="1" parent="1" source="cl_pf_k" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;" target="cl_pf_algo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_pf3" edge="1" parent="1" source="cl_pf_algo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;" target="cl_pf_metrics">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_pf4" edge="1" parent="1" source="cl_pf_metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;" target="cl_pf_stability">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_pj1" edge="1" parent="1" source="cl_pj_scale" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#3b82f6;" target="cl_pj_k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_pj2" edge="1" parent="1" source="cl_pj_k" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#3b82f6;" target="cl_pj_algo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_pj3" edge="1" parent="1" source="cl_pj_algo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#3b82f6;" target="cl_pj_metrics">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_pj4" edge="1" parent="1" source="cl_pj_metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#3b82f6;" target="cl_pj_stability">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_merge1" edge="1" parent="1" source="cl_pf_stability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="cl_gate">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1192" y="1050" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_cl_merge2" edge="1" parent="1" source="cl_pj_stability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="cl_gate">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="974" y="1208" />
+              <mxPoint x="1192" y="1208" />
+              <mxPoint x="1192" y="1184" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_cl_g1" edge="1" parent="1" source="cl_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;fontStyle=1;fontSize=9;" target="cl_coverage" value="Sim">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cl_g2" edge="1" parent="1" source="cl_coverage" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;" target="cl_pca_viz">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lane4_bg" parent="1" style="rounded=1;arcSize=10;fillColor=#f3e8ff;strokeColor=#a855f7;opacity=25;" value="" vertex="1">
+          <mxGeometry height="415" width="2030" x="40" y="1455" as="geometry" />
+        </mxCell>
+        <mxCell id="lane4_lbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;fontStyle=1;fontColor=#7e22ce;rotation=-90;align=center;" value="④ PERFIS" vertex="1">
+          <mxGeometry height="80" width="20" x="50" y="1625" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_profile1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;align=left;" value="Perfil PF — Cluster A&#xa;━━━━━━━━━━━━&#xa;Label: &#39;Cliente&#xa;Jovem Digital&#39;&#xa;Features médias&#xa;Churn propensão&#xa;Produtos usados&#xa;Ticket médio" vertex="1">
+          <mxGeometry height="155" width="155" x="80" y="1478" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_profile2" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;align=left;" value="Perfil PF — Cluster B&#xa;━━━━━━━━━━━━&#xa;Label: &#39;Sênior&#xa;Tradicional&#39;&#xa;Features médias&#xa;Comportamento&#xa;Canal preferido&#xa;Tempo carteira" vertex="1">
+          <mxGeometry height="155" width="155" x="255" y="1478" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_profile_n" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;align=left;dashed=1;" value="Perfil PF — Cluster N&#xa;━━━━━━━━━━━━&#xa;[replicar por cluster]&#xa;Label interpretável&#xa;aprovado pelo PO&#xa;Métricas descritivas&#xa;% da base total" vertex="1">
+          <mxGeometry height="155" width="155" x="430" y="1478" as="geometry" />
+        </mxCell>
+        <mxCell id="pj_profile1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;align=left;" value="Perfil PJ — Cluster A&#xa;━━━━━━━━━━━━&#xa;Label: &#39;PME&#xa;Crescimento&#39;&#xa;Porte do negócio&#xa;Setor de atuação&#xa;Engajamento&#xa;Volume operações" vertex="1">
+          <mxGeometry height="155" width="155" x="80" y="1680" as="geometry" />
+        </mxCell>
+        <mxCell id="pj_profile2" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;align=left;" value="Perfil PJ — Cluster B&#xa;━━━━━━━━━━━━&#xa;Label: &#39;Grande&#xa;Conta Estável&#39;&#xa;Faturamento faixa&#xa;Produtos contrat.&#xa;Histórico crédito&#xa;NPS médio" vertex="1">
+          <mxGeometry height="155" width="155" x="255" y="1680" as="geometry" />
+        </mxCell>
+        <mxCell id="pj_profile_n" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;align=left;dashed=1;" value="Perfil PJ — Cluster N&#xa;━━━━━━━━━━━━&#xa;[replicar por cluster]&#xa;Label interpretável&#xa;aprovado pelo PO&#xa;Métricas descritivas&#xa;% da base total" vertex="1">
+          <mxGeometry height="155" width="155" x="430" y="1680" as="geometry" />
+        </mxCell>
+        <mxCell id="pr_signoff" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;fontStyle=1;" value="Sign-off&#xa;dos Perfis&#xa;(DS + PO +&#xa;Domain Expert)&#xa;mede RAG_DOC_QUALITY" vertex="1">
+          <mxGeometry height="100" width="145" x="660" y="1553" as="geometry" />
+        </mxCell>
+        <mxCell id="pr_card" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;" value="Profile Card&#xa;por Cluster&#xa;(PF e PJ)&#xa;Markdown /&#xa;Notion template" vertex="1">
+          <mxGeometry height="100" width="135" x="875" y="1553" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf_sg" edge="1" parent="1" source="pf_profile1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#a855f7;" target="pr_signoff">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="1610" />
+              <mxPoint x="460" y="1610" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_pj_sg" edge="1" parent="1" source="pj_profile1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#a855f7;" target="pr_signoff">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="732" y="1810" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_sg_card" edge="1" parent="1" source="pr_signoff" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#a855f7;" target="pr_card">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lane5_bg" parent="1" style="rounded=1;arcSize=10;fillColor=#ffedd5;strokeColor=#f97316;opacity=25;" value="" vertex="1">
+          <mxGeometry height="365" width="2030" x="40" y="1885" as="geometry" />
+        </mxCell>
+        <mxCell id="lane5_lbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;fontStyle=1;fontColor=#c2410c;rotation=-90;align=center;" value="⑤ RAG" vertex="1">
+          <mxGeometry height="60" width="20" x="50" y="2040" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_prompt_template" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;align=left;" value="📝 Prompt Template&#xa;por Perfil&#xa;────────────────&#xa;[PERFIL]: {label}&#xa;[SEGMENTO]: PF/PJ&#xa;[CONTEXTO]: {features}&#xa;[OBJETIVO]: {task}&#xa;[RESTRIÇÕES]: {rules}" vertex="1">
+          <mxGeometry height="140" width="175" x="80" y="1920" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_doc_pf" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;align=left;" value="📄 Docs RAG — PF&#xa;por cluster:&#xa;• Perfil do cliente&#xa;• Comportamento&#xa;• Produtos afins&#xa;• Abordagem&#xa;• FAQ do segmento" vertex="1">
+          <mxGeometry height="135" width="165" x="315" y="1915" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_doc_pj" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;align=left;" value="📄 Docs RAG — PJ&#xa;por cluster:&#xa;• Perfil da empresa&#xa;• Porte / segmento&#xa;• Necessidades&#xa;• Jornada de compra&#xa;• Cases similares" vertex="1">
+          <mxGeometry height="135" width="165" x="315" y="2065" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_embed" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;" value="Embeddings&#xa;(OpenAI / HF&#xa;/ modelo local)&#xa;Chunk 512 tokens&#xa;Overlap 50 tokens" vertex="1">
+          <mxGeometry height="90" width="150" x="545" y="1963" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_vectordb" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;fontStyle=1;" value="🗄️ Vector Store&#xa;(Chroma / Pinecone&#xa;/ pgvector / FAISS)&#xa;Metadata: perfil,&#xa;segmento, cluster_id" vertex="1">
+          <mxGeometry height="90" width="155" x="760" y="1963" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_retrieval" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;" value="🔍 Retrieval&#xa;Top-K por perfil&#xa;Filtro metadata:&#xa;segmento=PF/PJ&#xa;cluster_id=N&#xa;mede PROMPT_RETRIEVAL" vertex="1">
+          <mxGeometry height="90" width="145" x="980" y="1963" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_quality_gate" parent="1" style="rhombus;whiteSpace=wrap;html=1;arcSize=10;strokeWidth=1.5;arcSize=10;strokeWidth=1.5;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;" value="Recall@5&#xa;≥ 0.80&#xa;por perfil?" vertex="1">
+          <mxGeometry height="105" width="135" x="1190" y="1953" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_llm" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;fontStyle=1;" value="🤖 LLM Response&#xa;(RAG-augmented)&#xa;Contexto do perfil&#xa;injetado no prompt&#xa;Resposta personalizada" vertex="1">
+          <mxGeometry height="90" width="150" x="1395" y="1963" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_eval" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;" value="Avaliação RAG&#xa;Faithfulness&#xa;Answer Relevance&#xa;Context Precision&#xa;mede RAG_DOC_QUALITY" vertex="1">
+          <mxGeometry height="90" width="150" x="1610" y="1963" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontStyle=1;" value="RAG por Perfil&#xa;em Produção" vertex="1">
+          <mxGeometry height="70" width="130" x="1826" y="1973" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rag1" edge="1" parent="1" source="rag_prompt_template" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;" target="rag_doc_pf">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="255" y="1965" />
+              <mxPoint x="315" y="1965" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_rag1b" edge="1" parent="1" source="rag_prompt_template" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;" target="rag_doc_pj">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="255" y="2060" />
+              <mxPoint x="255" y="2132" />
+              <mxPoint x="315" y="2132" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_rag2" edge="1" parent="1" source="rag_doc_pf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;" target="rag_embed">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="1982" />
+              <mxPoint x="545" y="1982" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_rag2b" edge="1" parent="1" source="rag_doc_pj" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;" target="rag_embed">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="2133" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_rag3" edge="1" parent="1" source="rag_embed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;" target="rag_vectordb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rag4" edge="1" parent="1" source="rag_vectordb" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;" target="rag_retrieval">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rag5" edge="1" parent="1" source="rag_retrieval" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;" target="rag_quality_gate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rag6" edge="1" parent="1" source="rag_quality_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;fontStyle=1;fontSize=9;" target="rag_llm" value="Sim">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rag7" edge="1" parent="1" source="rag_llm" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;" target="rag_eval">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rag8" edge="1" parent="1" source="rag_eval" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;" target="rag_end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rag_refine" edge="1" parent="1" source="rag_quality_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#ef4444;fontStyle=2;fontSize=9;" target="rag_doc_pf" value="Não: refinar docs">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1258" y="2240" />
+              <mxPoint x="397" y="2240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lv_bu_da" edge="1" parent="1" source="bu_success" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;strokeWidth=2;fontStyle=1;fontSize=9;" target="da_ticket_status" value="Escopo + Perguntas-guia">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1340" y="638" />
+              <mxPoint x="172" y="638" />
+              <mxPoint x="172" y="660" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lv_da_cl" edge="1" parent="1" source="da_quality_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#22c55e;strokeWidth=2;fontStyle=1;fontSize=9;" target="cl_pf_scale" value="Features PF">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1185" y="986" />
+              <mxPoint x="150" y="986" />
+              <mxPoint x="150" y="1025" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lv_da_cl2" edge="1" parent="1" source="da_quality_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#3b82f6;strokeWidth=2;fontStyle=1;fontSize=9;" target="cl_pj_scale" value="Features PJ">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1185" y="1130" />
+              <mxPoint x="154" y="1130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lv_cl_pr" edge="1" parent="1" source="cl_pca_viz" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#a855f7;strokeWidth=2;fontStyle=1;fontSize=9;" target="pf_profile1" value="Clusters aprovados">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1622" y="1447" />
+              <mxPoint x="157" y="1447" />
+              <mxPoint x="157" y="1478" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lv_pr_rag" edge="1" parent="1" source="pr_card" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;strokeColor=#94a3b8;fontFamily=Arial;strokeColor=#f97316;strokeWidth=2;fontStyle=1;fontSize=9;" target="rag_prompt_template" value="Profile Cards validados">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="942" y="1876" />
+              <mxPoint x="167" y="1876" />
+              <mxPoint x="167" y="1920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="metrics_table_bg" parent="1" style="rounded=0;arcSize=10;fillColor=#ffffff;strokeColor=#475569;" value="" vertex="1">
+          <mxGeometry height="1560" width="1630" x="2100" y="321" as="geometry" />
+        </mxCell>
+        <mxCell id="metrics_table_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=14;fontStyle=1;fontColor=#0f172a;" value="📊 TABELA COMPLETA DE MÉTRICAS DE RASTREABILIDADE" vertex="1">
+          <mxGeometry height="25" width="1630" x="2100" y="326" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_delay_header" parent="1" style="text;html=1;strokeColor=none;fillColor=#fee2e2;align=left;fontSize=12;fontStyle=1;fontColor=#b91c1c;" value="GARGALOS E CAUSAS DE ATRASO" vertex="1">
+          <mxGeometry height="22" width="400" x="2115" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_delay_body" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;" value="&lt;table style=&quot;width:100%; border-collapse:collapse; font-family:Arial, sans-serif;Inter&#39;, sans-serif; font-size:12px;&quot;&gt;&lt;thead&gt;&lt;tr style=&quot;background-color:#fee2e2; border-bottom:2px solid #ef4444; color:#7f1d1d;&quot;&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Métrica&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Fase&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Freq.&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Alerta&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style=&quot;border-bottom:1px solid #fecaca;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;BU_WAIT_DAYS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#991b1b; font-size:10px;&quot;&gt;Aguardando agenda de negócio (escalonar se &amp;gt; 15d)&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;BU&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;diária&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 15 dias&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fecaca;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;ACCESS_SLA_DAYS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#991b1b; font-size:10px;&quot;&gt;Tempo do ticket de acesso (usar proxy se &amp;gt; 10d)&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;BU + Dados&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;diária&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 10 dias&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fecaca;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;BLOCKED_DAYS_TOTAL&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#991b1b; font-size:10px;&quot;&gt;Dias em estado bloqueado (dep. externa)&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;projeto&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;semanal&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 20% total&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fecaca;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;MEETING_EFFECTIVENESS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#991b1b; font-size:10px;&quot;&gt;% de perguntas respondidas por reunião BU&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;BU&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;reunião&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 60%&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fecaca;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;REOPEN_COUNT&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#991b1b; font-size:10px;&quot;&gt;Vezes que uma fase foi reaberta por falta de dados&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Dados&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;sprint&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 2x&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" vertex="1">
+          <mxGeometry height="275" width="780" x="2115" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_data_header" parent="1" style="text;html=1;strokeColor=none;fillColor=#fef9c3;align=left;fontSize=12;fontStyle=1;fontColor=#a16207;" value="QUALIDADE DE DADOS" vertex="1">
+          <mxGeometry height="22" width="400" x="2115" y="703" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_data_body" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;" value="&lt;table style=&quot;width:100%; border-collapse:collapse; font-family:Arial, sans-serif;Inter&#39;, sans-serif; font-size:12px;&quot;&gt;&lt;thead&gt;&lt;tr style=&quot;background-color:#fef9c3; border-bottom:2px solid #eab308; color:#713f12;&quot;&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Métrica&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Segmento&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Meta&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Alerta&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style=&quot;border-bottom:1px solid #fef08a;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;DATA_COMPLETENESS(%)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#a16207; font-size:10px;&quot;&gt;Proporção de campos não-nulos por linha&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;PF / PJ&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 80%&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 60%&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fef08a;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;OUTLIER_RATE(%)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#a16207; font-size:10px;&quot;&gt;% registros fora de range (IQR / 3σ)&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Ambos&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;&amp;lt; 5%&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 15%&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fef08a;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;FEATURE_COVERAGE(%)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#a16207; font-size:10px;&quot;&gt;% features do schema esperado no dataset real&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Ambos&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;= 100%&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 80%&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fef08a;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;SCHEMA_DRIFT_DETECTED&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#a16207; font-size:10px;&quot;&gt;Mudança de schema detectada?&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Pipeline&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;False&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;True&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fef08a;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;DATA_FRESHNESS_DAYS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#a16207; font-size:10px;&quot;&gt;Idade média dos registros mais recentes&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Ambos&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≤ 30 dias&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 90 dias&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" vertex="1">
+          <mxGeometry height="250" width="780" x="2115" y="728" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_cl_header" parent="1" style="text;html=1;strokeColor=none;fillColor=#dcfce7;align=left;fontSize=12;fontStyle=1;fontColor=#15803d;" value="QUALIDADE DO CLUSTERING" vertex="1">
+          <mxGeometry height="22" width="400" x="2115" y="992" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_cl_body" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;" value="&lt;table style=&quot;width:100%; border-collapse:collapse; font-family:Arial, sans-serif;Inter&#39;, sans-serif; font-size:12px;&quot;&gt;&lt;thead&gt;&lt;tr style=&quot;background-color:#dcfce7; border-bottom:2px solid #22c55e; color:#14532d;&quot;&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Métrica&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Segmento&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Meta&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Alerta&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style=&quot;border-bottom:1px solid #bbf7d0;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;SILHOUETTE_SCORE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#166534; font-size:10px;&quot;&gt;Mede coesão vs separação [-1, 1]&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;PF / PJ&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 0.40&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 0.25&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #bbf7d0;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;CLUSTER_STABILITY_ARI&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#166534; font-size:10px;&quot;&gt;ARI em 10 execuções bootstrap&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;PF / PJ&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 0.85&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 0.60&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #bbf7d0;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;ITERATION_COUNT&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#166534; font-size:10px;&quot;&gt;Rodadas até atingir métricas&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Ambos&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≤ 5&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 10&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #bbf7d0;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;PROFILE_COVERAGE(%)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#166534; font-size:10px;&quot;&gt;% clientes cobertos pelos clusters&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;PF / PJ&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 95%&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 85%&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #bbf7d0;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;BUSINESS_APPROVAL_SCORE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#166534; font-size:10px;&quot;&gt;Score de aprovação dos labels por BU&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;PF / PJ&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 4/5&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 3/5&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" vertex="1">
+          <mxGeometry height="285" width="780" x="2115" y="1017" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_rag_header" parent="1" style="text;html=1;strokeColor=none;fillColor=#ffedd5;align=left;fontSize=12;fontStyle=1;fontColor=#c2410c;" value="QUALIDADE DO RAG E DOCUMENTOS" vertex="1">
+          <mxGeometry height="22" width="400" x="2115" y="1290" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_rag_body" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;" value="&lt;table style=&quot;width:100%; border-collapse:collapse; font-family:Arial, sans-serif;Inter&#39;, sans-serif; font-size:12px;&quot;&gt;&lt;thead&gt;&lt;tr style=&quot;background-color:#ffedd5; border-bottom:2px solid #f97316; color:#7c2d12;&quot;&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Métrica&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Escopo&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Meta&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Alerta&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style=&quot;border-bottom:1px solid #fed7aa;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;RAG_DOC_QUALITY_SCORE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#9a3412; font-size:10px;&quot;&gt;Qualidade humana do doc de negócio&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Perfil&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 4.0/5&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 3.0/5&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fed7aa;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;PROMPT_RETRIEVAL_RECALL@5&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#9a3412; font-size:10px;&quot;&gt;Taxa de acerto de documentos no RAG&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;PF / PJ&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 0.80&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 0.60&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fed7aa;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;CONTEXT_PRECISION&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#9a3412; font-size:10px;&quot;&gt;Precisão vs ruído do contexto injetado&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Consulta&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 0.75&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 0.50&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fed7aa;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;FAITHFULNESS_SCORE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#9a3412; font-size:10px;&quot;&gt;Nível de ausência de alucinação do LLM&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Consulta&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 0.85&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 0.70&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #fed7aa;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;PROFILE_TOTAL_DOCS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#9a3412; font-size:10px;&quot;&gt;Qtde. de docs base para inferir sobre o RAG&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;PF / PJ&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≥ 5 docs&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;lt; 3 docs&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" vertex="1">
+          <mxGeometry height="279.5" width="780" x="2115" y="1320.5" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_ttm_header" parent="1" style="text;html=1;strokeColor=none;fillColor=#dbeafe;align=left;fontSize=12;fontStyle=1;fontColor=#1d4ed8;" value="PRAZO E RASTREABILIDADE DO PROJETO" vertex="1">
+          <mxGeometry height="22" width="400" x="2115" y="1611" as="geometry" />
+        </mxCell>
+        <mxCell id="mt_ttm_body" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;" value="&lt;table style=&quot;width:100%; border-collapse:collapse; font-family:Arial, sans-serif;Inter&#39;, sans-serif; font-size:12px;&quot;&gt;&lt;thead&gt;&lt;tr style=&quot;background-color:#dbeafe; border-bottom:2px solid #3b82f6; color:#1e3a8a;&quot;&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Métrica&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Freq.&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Meta&lt;/th&gt;&lt;th style=&quot;padding:8px; text-align:left;&quot;&gt;Alerta&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style=&quot;border-bottom:1px solid #bfdbfe;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;TIME_TO_FIRST_CLUSTER&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#1e40af; font-size:10px;&quot;&gt;Dias até fechar modelo inicial&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Projeto&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≤ 30 dias&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 60 dias&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #bfdbfe;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;TIME_TO_RAG_READY&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#1e40af; font-size:10px;&quot;&gt;Dias de documentação e injeção do RAG&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Projeto&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;≤ 15 dias&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 30 dias&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #bfdbfe;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;BACKLOG_DELAY_RATIO(%)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#1e40af; font-size:10px;&quot;&gt;Atraso em backlog tasks&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Semanal&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;&amp;lt; 10%&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 30%&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #bfdbfe;&quot;&gt;&lt;td style=&quot;padding:8px;&quot;&gt;&lt;b&gt;KNOWLEDGE_GAP_SCORE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#1e40af; font-size:10px;&quot;&gt;Dúvidas não sanadas (bloqueia avanço)&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;padding:8px;&quot;&gt;Projeto&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#16a34a;&quot;&gt;= 0&lt;/td&gt;&lt;td style=&quot;padding:8px; color:#ef4444; font-weight:bold;&quot;&gt;&amp;gt; 0&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" vertex="1">
+          <mxGeometry height="244" width="780" x="2115" y="1636" as="geometry" />
+        </mxCell>
+        <mxCell id="algo_guide" parent="1" style="text;html=1;strokeColor=#16a34a;fillColor=#f0fdf4;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=10;overflow=hidden;" value="&lt;div style=&quot;padding:12px; font-family:Arial, sans-serif;Inter&#39;, sans-serif;&quot;&gt;&lt;h3 style=&quot;margin-top:0; margin-bottom:12px; color:#15803d;&quot;&gt;GUIA DE SELEÇÃO DE ALGORITMOS&lt;/h3&gt;&lt;table style=&quot;width:100%; border-collapse:collapse; font-size:11px; margin-bottom:16px;&quot;&gt;&lt;thead&gt;&lt;tr style=&quot;border-bottom:2px solid #bbf7d0; text-align:left; color:#14532d;&quot;&gt;&lt;th style=&quot;padding:6px;&quot;&gt;DADO&lt;/th&gt;&lt;th style=&quot;padding:6px;&quot;&gt;RECOMENDADO&lt;/th&gt;&lt;th style=&quot;padding:6px;&quot;&gt;POR QUÊ&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style=&quot;border-bottom:1px solid #dcfce7;&quot;&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Tabular, n&amp;gt;10k&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;&lt;b&gt;K-Means&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Escala rápido e interpretável&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #dcfce7;&quot;&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Tabular, n&amp;lt;5k&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;&lt;b&gt;Agglomerative&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Dendrograma para grupos&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #dcfce7;&quot;&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Tabular misto&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;&lt;b&gt;K-Prototypes&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Numérico + categórico nativo&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #dcfce7;&quot;&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Forma irregular&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;&lt;b&gt;DBSCAN&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Não assume esfericidade&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #dcfce7;&quot;&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Gaussiano&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;&lt;b&gt;GMM&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Probabilidade de pertinência&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;border-bottom:1px solid #dcfce7;&quot;&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Hierar. PJ&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;&lt;b&gt;Bisecting K-Means&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;padding:6px;&quot;&gt;Segmentação top-down&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;ul style=&quot;font-size:11px; padding-left:20px; color:#166534; line-height:1.6; margin:0;&quot;&gt;&lt;li&gt;&lt;b&gt;Seleção de K:&lt;/b&gt; Elbow + Silhouette + Davies-Bouldin. &lt;u&gt;Sempre validar com expert.&lt;/u&gt;&lt;/li&gt;&lt;li&gt;&lt;b&gt;Normalização:&lt;/b&gt; StandardScaler. RobustScaler (para PJ / Outliers). Log-transform (para faturamento/R$).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Features PF:&lt;/b&gt; Demográficas, comportamentais, transações.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Features PJ:&lt;/b&gt; Porte, setor CNAE, faturamento, engajamento.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="430" width="790" x="2920" y="401" as="geometry" />
+        </mxCell>
+        <mxCell id="profile_template" parent="1" style="text;html=1;strokeColor=#a855f7;fillColor=#faf5ff;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=10;overflow=hidden;" value="&lt;div style=&quot;padding:16px; font-family:Arial, sans-serif;Inter&#39;, sans-serif; color:#4c1d95;&quot;&gt;&lt;h3 style=&quot;margin-top:0; color:#7e22ce; border-bottom:2px solid #d8b4fe; padding-bottom:8px;&quot;&gt;🗒️ TEMPLATE DE PROFILE CARD&lt;/h3&gt;&lt;h4 style=&quot;margin:12px 0 8px 0; color:#581c87;&quot;&gt;Perfil: [LABEL INTERPRETÁVEL]&lt;/h4&gt;&lt;div style=&quot;background:#f3e8ff; padding:10px; border-radius:6px; font-size:11px; margin-bottom:12px;&quot;&gt;&lt;b&gt;Segmento:&lt;/b&gt; PF / PJ &amp;nbsp;|&amp;nbsp; &lt;b&gt;Cluster ID:&lt;/b&gt; N &amp;nbsp;|&amp;nbsp; &lt;b&gt;Base:&lt;/b&gt; XX%&lt;/div&gt;&lt;b style=&quot;font-size:12px;&quot;&gt;Características Centrais:&lt;/b&gt;&lt;ul style=&quot;margin:6px 0 12px 0; padding-left:20px; font-size:11px; line-height:1.4;&quot;&gt;&lt;li&gt;Feature 1: valor médio ± desvio&lt;/li&gt;&lt;li&gt;Feature 2: valor médio ± desvio&lt;/li&gt;&lt;li&gt;Feature N: valor médio ± desvio&lt;/li&gt;&lt;/ul&gt;&lt;b style=&quot;font-size:12px;&quot;&gt;Comportamento Típico:&lt;/b&gt;&lt;div style=&quot;font-size:11px; margin:6px 0 12px 0; color:#6b21a8; font-style:italic;&quot;&gt;&amp;quot;[Descrição validada com stakeholder de negócio]&amp;quot;&lt;/div&gt;&lt;b style=&quot;font-size:12px;&quot;&gt;Produtos Associados:&lt;/b&gt;&lt;ul style=&quot;margin:6px 0 12px 0; padding-left:20px; font-size:11px;&quot;&gt;&lt;li&gt;Produto A (freq: XX%) &amp;nbsp;|&amp;nbsp; Produto B (freq: XX%)&lt;/li&gt;&lt;/ul&gt;&lt;b style=&quot;font-size:12px;&quot;&gt;Propensão:&lt;/b&gt;&lt;div style=&quot;font-size:11px; margin:6px 0 12px 0;&quot;&gt;Churn: XX% &amp;nbsp;|&amp;nbsp; Cross-sell: XX%&lt;/div&gt;&lt;b style=&quot;font-size:12px;&quot;&gt;Abordagem Recomendada:&lt;/b&gt;&lt;div style=&quot;font-size:11px; margin:6px 0 16px 0;&quot;&gt;[Ação sugerida pelo negócio]&lt;/div&gt;&lt;div style=&quot;margin-top:16px; font-size:11px; border-top:1px dashed #d8b4fe; padding-top:12px;&quot;&gt;&lt;b&gt;Aprovação:&lt;/b&gt; DS: _________ &amp;nbsp; PO: _________ &amp;nbsp; Data: _________&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="490" width="790" x="2920" y="851" as="geometry" />
+        </mxCell>
+        <mxCell id="rag_prompt_guide" parent="1" style="text;html=1;strokeColor=#ea580c;fillColor=#fffbeb;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=10;overflow=hidden;" value="&lt;div style=&quot;padding:16px; font-family:Arial, sans-serif;Inter&#39;, sans-serif; color:#9a3412;&quot;&gt;&lt;h3 style=&quot;margin-top:0; color:#ea580c; border-bottom:2px solid #fed7aa; padding-bottom:8px;&quot;&gt;🤖 TEMPLATE DE PROMPT RAG&lt;/h3&gt;&lt;b style=&quot;font-size:12px;&quot;&gt;System Prompt (Injetado):&lt;/b&gt;&lt;div style=&quot;background:#ffedd5; padding:12px; border-radius:6px; font-size:11px; margin:8px 0 16px 0; font-family:Arial, sans-serif; line-height:1.5;&quot;&gt;Você é um assistente especializado em [domínio].&lt;br&gt;O cliente possui o seguinte perfil:&lt;br&gt;&lt;br&gt;&lt;b&gt;Segmento:&lt;/b&gt; {pf_ou_pj}&lt;br&gt;&lt;b&gt;Perfil:&lt;/b&gt; {label_do_cluster}&lt;br&gt;&lt;b&gt;Características:&lt;/b&gt; {features_resumidas}&lt;br&gt;&lt;br&gt;Use apenas as informações do contexto abaixo. Se não souber, diga que não sabe.&lt;br&gt;&lt;br&gt;&lt;b&gt;Contexto recuperado:&lt;/b&gt;&lt;br&gt;{top_k_chunks_do_vector_store}&lt;/div&gt;&lt;b style=&quot;font-size:12px;&quot;&gt;User Prompt:&lt;/b&gt;&lt;div style=&quot;background:#ffedd5; padding:12px; border-radius:6px; font-size:11px; margin:8px 0 16px 0; font-family:Arial, sans-serif;&quot;&gt;{pergunta_do_usuário}&lt;/div&gt;&lt;div style=&quot;font-size:11px; border-top:1px dashed #fed7aa; padding-top:12px;&quot;&gt;&lt;b style=&quot;color:#c2410c;&quot;&gt;🔍 METADADOS DE FILTRO NO VECTOR STORE:&lt;/b&gt;&lt;ul style=&quot;margin:8px 0 0 0; padding-left:20px; line-height:1.5;&quot;&gt;&lt;li&gt;segmento: &#39;PF&#39; | &#39;PJ&#39;&lt;/li&gt;&lt;li&gt;cluster_id: N&lt;/li&gt;&lt;li&gt;doc_type: &#39;perfil&#39; | &#39;produto&#39; | &#39;faq&#39;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="490" width="790" x="2920" y="1361" as="geometry" />
+        </mxCell>
+        <mxCell id="glossary_acronyms" parent="1" style="text;html=1;strokeColor=#3b82f6;fillColor=#eff6ff;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=5;fontSize=11;fontFamily=Arial;shadow=1;" value="&lt;div style=&quot;font-family:Arial, sans-serif; padding:12px;&quot;&gt;&lt;div style=&quot;font-size:13px; font-weight:bold; color:#1e3a5f; border-bottom:2px solid #3b82f6; padding-bottom:6px; margin-bottom:10px;&quot;&gt;📖 GLOSSÁRIO DE SIGLAS&lt;/div&gt;&lt;table style=&quot;width:100%; border-collapse:collapse; font-size:11px;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;AIC&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Akaike Information Criterion — critério de seleção de modelos GMM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ARI&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Adjusted Rand Index — estabilidade de clustering (meta ≥ 0.85)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;BIC&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Bayesian Information Criterion — critério de seleção de K em GMM&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;BU&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Business Unit — área de negócio responsável pela aprovação dos clusters&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;CNAE&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Classificação Nacional de Atividades Econômicas — feature de segmentação PJ&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;DBSCAN&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Density-Based Spatial Clustering — algoritmo para formas irregulares&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;FAISS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Facebook AI Similarity Search — biblioteca de busca vetorial eficiente&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;FAQ&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Frequently Asked Questions — base de perguntas frequentes no RAG&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;GMM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Gaussian Mixture Model — clustering probabilístico (soft assignment)&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;IQR&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Interquartile Range — método de detecção de outliers (Q3 - Q1)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;LLM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Large Language Model — modelo de linguagem (ex.: GPT, Claude, Gemini)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;NPS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Net Promoter Score — métrica de satisfação e lealdade do cliente&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PCA&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Principal Component Analysis — redução de dimensionalidade para visualização&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PF&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Pessoa Física — segmento de clientes individuais&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PJ&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Pessoa Jurídica — segmento de clientes empresariais&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PME&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Pequenas e Médias Empresas — subgrupo de PJ por porte&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;RAG&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Retrieval-Augmented Generation — geração de texto com contexto recuperado&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;SLA&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Service Level Agreement — acordo de nível de serviço (prazo de acesso a dados)&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="272" width="2880" x="40" y="2200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

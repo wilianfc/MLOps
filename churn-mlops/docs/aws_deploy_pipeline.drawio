@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron" version="21.0.0">
+  <diagram id="aws-deploy" name="AWS Deploy Pipeline">
+    <mxGraphModel dx="1800" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="1800" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ================================================================
+             TÍTULO
+        ================================================================ -->
+        <mxCell id="title" value="Deploy MLOps — AWS + Python Libraries&#xa;Churn Prediction | FastAPI · scikit-learn · Docker · SageMaker" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=18;fontStyle=1;fontColor=#1e3a5f;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="600" y="20" width="1800" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================================
+             FAIXA 1 — LOCAL / CI  (GitHub Actions)
+        ================================================================ -->
+        <mxCell id="lane_ci_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;opacity=40;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="3220" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_ci_lbl" value="① BUILD &amp; TEST — GitHub Actions CI" style="text;html=1;strokeColor=none;fillColor=none;fontSize=13;fontStyle=1;fontColor=#1f2937;rotation=-90;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="30" height="200" as="geometry" />
+        </mxCell>
+
+        <!-- Python package boxes -->
+        <mxCell id="py_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;dashed=1;dashPattern=6 3;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="90" y="100" width="560" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="py_lbl" value="🐍 Python 3.11 — Libraries" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1;fontColor=#d6a800;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="280" y="103" width="180" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="py_sklearn" value="scikit-learn 1.5.1&#xa;Pipeline&#xa;StandardScaler&#xa;GradientBoosting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="105" y="128" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="py_fastapi" value="FastAPI 0.111.1&#xa;Pydantic validators&#xa;lifespan hooks&#xa;middleware" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="240" y="128" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="py_uvicorn" value="uvicorn 0.30.1&#xa;ASGI server&#xa;1 worker&#xa;port 8000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="375" y="128" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="py_numpy" value="numpy 1.26.4&#xa;pandas 2.2.2&#xa;matplotlib 3.9.1&#xa;httpx 0.27.0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="510" y="128" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- pytest row -->
+        <mxCell id="py_pytest" value="pytest 8.2.2 + pytest-asyncio 0.23.7&#xa;test_model.py · test_clustering.py  →  23 testes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#34a853;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="105" y="213" width="522" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- CI steps -->
+        <mxCell id="ci_src" value="git push&#xa;main / PR" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="690" y="145" width="90" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_ruff" value="ruff&#xa;Lint / Format&#xa;check" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="840" y="150" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_train" value="python train.py&#xa;+ clustering&#xa;_analysis.py" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="150" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_pytest" value="pytest tests/&#xa;ROC-AUC ≥ 0.70&#xa;V-Measure ≥ 0.50" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="150" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_build" value="docker buildx&#xa;python:3.11-slim&#xa;non-root user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="150" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_smoke" value="Smoke Test&#xa;curl /health&#xa;POST /predict" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1530" y="150" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_tag" value="docker tag&#xa;churn-api:sha&#xa;→ ECR URI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1710" y="150" width="120" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_ci1" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" edge="1" source="ci_src" target="ci_ruff" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ci2" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" edge="1" source="ci_ruff" target="ci_train" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ci3" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" edge="1" source="ci_train" target="ci_pytest" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ci4" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" edge="1" source="ci_pytest" target="ci_build" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ci5" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" edge="1" source="ci_build" target="ci_smoke" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ci6" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" edge="1" source="ci_smoke" target="ci_tag" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================================================================
+             FAIXA 2 — AWS ECR + S3 (ARTIFACTS)
+        ================================================================ -->
+        <mxCell id="lane_ecr_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf3e7;strokeColor=#d79b00;opacity=40;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="3220" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_ecr_lbl" value="② REGISTRY — AWS ECR + S3" style="text;html=1;strokeColor=none;fillColor=none;fontSize=13;fontStyle=1;fontColor=#d79b00;rotation=-90;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="40" y="400" width="30" height="180" as="geometry" />
+        </mxCell>
+
+        <!-- AWS ECR -->
+        <mxCell id="ecr_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf3e7;strokeColor=#d79b00;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="90" y="365" width="500" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="ecr_lbl" value="🐳  Amazon ECR — Elastic Container Registry" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1;fontColor=#d79b00;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="180" y="367" width="320" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ecr_latest" value="churn-api:latest&#xa;(imagem produção)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="105" y="393" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ecr_sha" value="churn-api:&lt;git-sha&gt;&#xa;(imagem específica)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="265" y="393" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ecr_scan" value="ECR Image Scan&#xa;CVE vulnerabilities&#xa;HIGH / CRITICAL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="393" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ecr_lifecycle" value="Lifecycle Policy: manter 10 tags, expirar após 90d" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontStyle=2;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="105" y="453" width="455" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- AWS S3 -->
+        <mxCell id="s3_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf3e7;strokeColor=#d79b00;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="365" width="480" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_lbl" value="🪣  Amazon S3 — Artifact Store" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1;fontColor=#d79b00;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="780" y="367" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_model" value="model.pkl&#xa;(scikit-learn Pipeline)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="655" y="393" width="135" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_meta" value="metadata.json&#xa;ROC-AUC, features,&#xa;timestamp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="805" y="393" width="135" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_cluster" value="cluster_report.json&#xa;profile_cards.json (PF+PJ)&#xa;cluster_profiles/ (docs RAG)&#xa;elbow_curve.png · pca_clusters.png" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="955" y="393" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_ver" value="Versioning: ON — S3 Object Lock (WORM) para auditoria" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontStyle=2;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="655" y="453" width="460" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- SageMaker Model Registry -->
+        <mxCell id="sm_registry" value="📋 SageMaker&#xa;Model Registry&#xa;PendingApproval&#xa;→ Approved" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf3e7;strokeColor=#d79b00;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1175" y="390" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_registry_detail" value="Champion vs Challenger&#xa;Versão, métricas, artefatos&#xa;ARN do modelo" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontStyle=2;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1175" y="475" width="140" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Setas CI → ECR / S3 -->
+        <mxCell id="e_tag_ecr" value="docker push" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d79b00;strokeWidth=2;fontStyle=1;fontSize=9;fontFamily=Arial;" edge="1" source="ci_tag" target="ecr_sha" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1770" y="420" /><mxPoint x="335" y="420" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_ci_s3" value="upload artifacts" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d79b00;strokeWidth=2;fontStyle=1;fontSize=9;fontFamily=Arial;" edge="1" source="ci_pytest" target="s3_model" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1230" y="410" /><mxPoint x="1230" y="370" /><mxPoint x="725" y="370" /><mxPoint x="725" y="393" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s3_smreg" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d79b00;fontFamily=Arial;strokeWidth=2;" edge="1" source="s3_model" target="sm_registry" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================================================================
+             FAIXA 3 — SAGEMAKER PIPELINE (ORQUESTRAÇÃO)
+        ================================================================ -->
+        <mxCell id="lane_sm_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;opacity=40;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="3220" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_sm_lbl" value="③ ORQUESTRAÇÃO — SageMaker Pipelines (DAG)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=13;fontStyle=1;fontColor=#007bff;rotation=-90;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="30" height="220" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sm_etl" value="⚙️ ProcessingStep&#xa;AWS Glue ETL&#xa;glue_etl_job.py&#xa;PySpark Serverless" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="90" y="595" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_train_step" value="🏋️ TrainingStep&#xa;train_sagemaker.py&#xa;ml.m5.xlarge&#xa;/opt/ml/ convention" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="290" y="595" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_eval_step" value="📊 ProcessingStep&#xa;evaluate.py&#xa;ROC-AUC, F1&#xa;evaluation.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="490" y="595" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_cond" value="❓ ConditionStep&#xa;ROC-AUC ≥ threshold&#xa;(Pipeline Param)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="690" y="585" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_register" value="📋 RegisterModel&#xa;SageMaker Registry&#xa;PendingApproval" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="910" y="595" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_fail" value="❌ Fail Step&#xa;Notifica SNS&#xa;Artefato rejeitado" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="910" y="700" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Params -->
+        <mxCell id="sm_params" value="Pipeline Parameters (sagemaker_pipeline.py):&#xa;InputS3Path · ProcessedS3Path · NEstimators · LearningRate · MaxDepth · RocAucThreshold" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#007bff;fontSize=10;fontStyle=2;dashed=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="600" width="520" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_sm1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#007bff;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_etl" target="sm_train_step" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_sm2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#007bff;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_train_step" target="sm_eval_step" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_sm3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#007bff;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_eval_step" target="sm_cond" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_sm4" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#007bff;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_cond" target="sm_register" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_sm4l" value="Aprovado" style="edgeLabel;html=1;fontSize=9;fontStyle=1;fillColor=none;strokeColor=none;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" vertex="1" connectable="0" parent="e_sm4"><mxGeometry x="0.5" relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_sm5" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_cond" target="sm_fail" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="765" y="730" /><mxPoint x="980" y="730" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_sm5l" value="Reprovado" style="edgeLabel;html=1;fontSize=9;fontStyle=1;fillColor=none;strokeColor=none;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" vertex="1" connectable="0" parent="e_sm5"><mxGeometry x="0.5" relative="1" as="geometry" /></mxCell>
+
+        <!-- SM → Registry link -->
+        <mxCell id="e_smreg_to_step" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#d79b00;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_registry" target="sm_register" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1245" y="450" /><mxPoint x="1245" y="580" /><mxPoint x="980" y="580" /><mxPoint x="980" y="595" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ================================================================
+             FAIXA 4 — ECS/FARGATE + SAGEMAKER ENDPOINT (RUNTIME)
+        ================================================================ -->
+        <mxCell id="lane_run_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce8e8;strokeColor=#b85450;opacity=40;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="810" width="3220" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_run_lbl" value="④ RUNTIME — ECS Fargate + SageMaker Endpoint" style="text;html=1;strokeColor=none;fillColor=none;fontSize=13;fontStyle=1;fontColor=#b85450;rotation=-90;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="40" y="890" width="30" height="220" as="geometry" />
+        </mxCell>
+
+        <!-- PATH A — ECS Fargate -->
+        <mxCell id="ecs_path_lbl" value="PATH A — ECS Fargate (Docker / FastAPI)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontColor=#b85450;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="90" y="820" width="350" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ecs_alb" value="🌐 Application&#xa;Load Balancer&#xa;HTTPS 443&#xa;→ Target Group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce8e8;strokeColor=#b85450;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="90" y="848" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_task" value="🐳 ECS Task&#xa;churn-api container&#xa;uvicorn 0.30.1&#xa;port 8000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce8e8;strokeColor=#b85450;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="848" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_fastapi" value="FastAPI app.py&#xa;POST /predict&#xa;GET /health&#xa;GET /metrics" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="848" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_pydantic" value="Pydantic&#xa;CustomerFeatures&#xa;PredictionResponse&#xa;Validators" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="848" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_sklearn_inf" value="scikit-learn&#xa;Pipeline.predict()&#xa;model.pkl&#xa;loaded at startup" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="850" y="848" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_resp" value="Response JSON&#xa;churn_prediction (bool)&#xa;churn_probability (float)&#xa;risk_level: ALTO/MÉDIO/BAIXO&#xa;cluster_id (int)&#xa;perfil_label (str)&#xa;segmento: PF | PJ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce8e8;strokeColor=#b85450;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="843" width="130" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_autoscale" value="ECS Auto Scaling&#xa;min 1 / max 10&#xa;CPU ≥ 60%" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce8e8;strokeColor=#b85450;fontSize=10;fontStyle=2;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="955" width="320" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_ecs1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontFamily=Arial;strokeWidth=2;" edge="1" source="ecs_alb" target="ecs_task" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ecs2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontFamily=Arial;strokeWidth=2;" edge="1" source="ecs_task" target="ecs_fastapi" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ecs3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontFamily=Arial;strokeWidth=2;" edge="1" source="ecs_fastapi" target="ecs_pydantic" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ecs4" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontFamily=Arial;strokeWidth=2;" edge="1" source="ecs_pydantic" target="ecs_sklearn_inf" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_ecs5" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontFamily=Arial;strokeWidth=2;" edge="1" source="ecs_sklearn_inf" target="ecs_resp" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- PATH B — SageMaker -->
+        <mxCell id="sm_path_lbl" value="PATH B — SageMaker Endpoint (managed)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontColor=#007bff;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="820" width="350" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sm_apigw" value="🌐 API Gateway&#xa;REST API&#xa;/churn/predict&#xa;POST + Auth" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="848" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_lambda" value="λ AWS Lambda&#xa;boto3 invoke&#xa;runtime=boto3&#xa;serializer JSON" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="848" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_endpoint" value="⚡ SageMaker&#xa;Endpoint&#xa;ml.t3.medium&#xa;churn-endpoint" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1660" y="848" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_inf_cont" value="Inference Container&#xa;inference.py&#xa;scikit-learn Pipeline&#xa;model.pkl from S3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6a800;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1850" y="848" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_datacapture" value="DataCapture&#xa;20% sampling&#xa;→ S3 (baseline)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontStyle=2;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1660" y="955" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_multimodel" value="Multi-Model / Shadow&#xa;Champion vs Challenger&#xa;A/B Traffic Split" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#007bff;fontSize=10;fontStyle=2;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="955" width="170" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_sm_gw1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#007bff;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_apigw" target="sm_lambda" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_sm_gw2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#007bff;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_lambda" target="sm_endpoint" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_sm_gw3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#007bff;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_endpoint" target="sm_inf_cont" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_sm_dc" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#007bff;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_endpoint" target="sm_datacapture" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================================================================
+             FAIXA 5 — MONITORING / CloudWatch
+        ================================================================ -->
+        <mxCell id="lane_mon_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fff0;strokeColor=#34a853;opacity=40;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1110" width="3220" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_mon_lbl" value="⑤ OBSERVABILIDADE — CloudWatch + Model Monitor" style="text;html=1;strokeColor=none;fillColor=none;fontSize=13;fontStyle=1;fontColor=#34a853;rotation=-90;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1190" width="30" height="220" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cw_health" value="CloudWatch&#xa;/health probe&#xa;ECS HealthCheck&#xa;ALB Target Health" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f9ef;strokeColor=#34a853;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="90" y="1145" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cw_metrics" value="CloudWatch Metrics&#xa;Latência p50/p95/p99&#xa;X-Process-Time-Ms&#xa;RequestCount, Errors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f9ef;strokeColor=#34a853;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="290" y="1145" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cw_logs" value="CloudWatch Logs&#xa;app.py request log&#xa;FastAPI access log&#xa;Error tracing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f9ef;strokeColor=#34a853;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1145" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sm_monitor" value="SM Model Monitor&#xa;DataQualityJob&#xa;baseline statistics&#xa;vs captured data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f9ef;strokeColor=#34a853;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1145" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cw_alarm" value="CloudWatch Alarm&#xa;ROC-AUC degradation&#xa;→ SNS Topic&#xa;→ Slack / Email" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f9ef;strokeColor=#34a853;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="910" y="1145" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cw_dashboard" value="CloudWatch Dashboard&#xa;Grafana (opcional)&#xa;KPIs em tempo real&#xa;GET /metrics (FastAPI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f9ef;strokeColor=#34a853;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="1145" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cw_retrain" value="EventBridge&#xa;Regra scheduled&#xa;→ Trigger SM Pipeline&#xa;Retreino automático" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="1140" width="150" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_mon1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#34a853;fontFamily=Arial;strokeWidth=2;" edge="1" source="cw_health" target="cw_metrics" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_mon2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#34a853;fontFamily=Arial;strokeWidth=2;" edge="1" source="cw_metrics" target="cw_logs" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_mon3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#34a853;fontFamily=Arial;strokeWidth=2;" edge="1" source="cw_logs" target="sm_monitor" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_mon4" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#34a853;fontFamily=Arial;strokeWidth=2;" edge="1" source="sm_monitor" target="cw_alarm" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_mon5" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#34a853;fontFamily=Arial;strokeWidth=2;" edge="1" source="cw_alarm" target="cw_dashboard" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_mon6" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontFamily=Arial;strokeWidth=2;" edge="1" source="cw_alarm" target="cw_retrain" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================================================================
+             SETAS VERTICAIS ENTRE FAIXAS (fluxo principal)
+        ================================================================ -->
+        <!-- CI → ECR -->
+        <mxCell id="lv_ci_ecr" value="docker push" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d79b00;strokeWidth=2;fontStyle=1;fontSize=9;fontFamily=Arial;" edge="1" source="ci_build" target="ecr_latest" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1410" y="380" /><mxPoint x="175" y="380" /><mxPoint x="175" y="393" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- ECR → ECS -->
+        <mxCell id="lv_ecr_ecs" value="pull image" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;fontStyle=1;fontSize=9;fontFamily=Arial;" edge="1" source="ecr_sha" target="ecs_task" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="335" y="791" /><mxPoint x="345" y="791" /><mxPoint x="345" y="848" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- SM Registry → SM Endpoint -->
+        <mxCell id="lv_smreg_ep" value="deploy approved" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#007bff;strokeWidth=2;fontStyle=1;fontSize=9;fontFamily=Arial;" edge="1" source="sm_register" target="sm_endpoint" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="980" y="800" /><mxPoint x="1725" y="800" /><mxPoint x="1725" y="848" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- ECS → CloudWatch -->
+        <mxCell id="lv_ecs_cw" value="metrics / logs" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#34a853;strokeWidth=2;fontStyle=1;fontSize=9;fontFamily=Arial;" edge="1" source="ecs_fastapi" target="cw_metrics" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="535" y="1095" /><mxPoint x="365" y="1095" /><mxPoint x="365" y="1145" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- SM Endpoint → SM Monitor -->
+        <mxCell id="lv_ep_mon" value="captured data" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#34a853;strokeWidth=2;fontStyle=1;fontSize=9;fontFamily=Arial;" edge="1" source="sm_datacapture" target="sm_monitor" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1725" y="1080" /><mxPoint x="775" y="1080" /><mxPoint x="775" y="1145" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- EventBridge → SM Pipeline (loop) -->
+        <mxCell id="lv_retrain_loop" value="↩ new Pipeline run" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#9673a6;strokeWidth=2;fontStyle=3;fontSize=10;fontFamily=Arial;" edge="1" source="cw_retrain" target="sm_etl" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="3240" y="1180" /><mxPoint x="3240" y="635" /><mxPoint x="160" y="635" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ================================================================
+             TABELA DE LIBS PYTHON (CANTO DIREITO)
+        ================================================================ -->
+        <mxCell id="lib_table" value="PYTHON LIBRARIES — MAPEAMENTO&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;scikit-learn 1.5.1   Pipeline · StandardScaler · GBM&#xa;                     KMeans · silhouette_score · metrics&#xa;&#xa;FastAPI 0.111.1      Roteamento · Pydantic · Lifespan&#xa;                     Middleware de latência · HTTPException&#xa;&#xa;uvicorn 0.30.1       ASGI runtime · port 8000 · 1 worker&#xa;&#xa;pydantic (embutida)  CustomerFeatures · PredictionResponse&#xa;                     Validators (ge/le/range)&#xa;&#xa;numpy 1.26.4         Arrays para inferência em batch&#xa;pandas 2.2.2         DataFrame para EDA / feature eng.&#xa;matplotlib 3.9.1     Elbow, Silhouette, PCA 2D (Agg backend)&#xa;&#xa;boto3 (AWS SDK)      invoke_endpoint · sagemaker Pipeline&#xa;                     s3.put_object · cloudwatch.put_metric&#xa;&#xa;pytest 8.2.2         test_model.py (23 testes)&#xa;pytest-asyncio       TestAPIEndpoints (async httpx)&#xa;httpx 0.27.0         AsyncClient para smoke tests&#xa;&#xa;AWS CLI / gh actions aws ecr get-login-password · docker push&#xa;                     actions/upload-artifact · cache pip" style="text;html=1;strokeColor=#333333;fillColor=#f9f9f9;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="2050" y="840" width="550" height="470" as="geometry" />
+        </mxCell>
+
+        <!-- AWS SERVICES TABLE -->
+        <mxCell id="aws_table" value="AWS SERVICES — RESPONSABILIDADES&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Amazon ECR         Registry de imagens Docker&#xa;Amazon S3          Artefatos (model.pkl, Parquet, PNGs)&#xa;AWS Glue           ETL PySpark Serverless&#xa;SageMaker Training Training Job gerenciado&#xa;SageMaker Pipeline DAG de steps (ETL→Train→Eval→Register)&#xa;SageMaker Registry Versionamento e aprovação de modelos&#xa;SageMaker Endpoint Inferência gerenciada (ml.t3.medium)&#xa;SageMaker Monitor  DataQualityJob + drift baseline&#xa;AWS Lambda         Proxy boto3 → SM Endpoint&#xa;API Gateway        REST API pública com Auth&#xa;ECS Fargate        Container FastAPI serverless&#xa;ALB                Load Balancer HTTPS + health check&#xa;CloudWatch Metrics Latência, erros, throughput&#xa;CloudWatch Logs    Logs estruturados da API&#xa;CloudWatch Alarms  Threshold → SNS → alertas&#xa;Amazon SNS         Notificações (email/Slack/PagerDuty)&#xa;EventBridge        Scheduler → trigger retreino automático&#xa;IAM Roles          Permissões mínimas por serviço" style="text;html=1;strokeColor=#007bff;fillColor=#f0f8ff;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="2640" y="840" width="550" height="470" as="geometry" />
+        </mxCell>
+
+          <mxCell id="ecs_rag_route" value="FastAPI&#xa;POST /rag/query&#xa;{cluster_id, segmento,&#xa; pergunta}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="870" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs_vector_store" value="Vector Store&#xa;FAISS / pgvector&#xa;filtro: segmento&#xa;+ cluster_id" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="870" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rag1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#f97316;fontFamily=Arial;strokeWidth=2;" edge="1" source="ecs_rag_route" target="ecs_vector_store" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ann_rag_aws" parent="1" style="text;html=1;strokeColor=#ea580c;fillColor=#fffbeb;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=5;fontSize=11;fontFamily=Arial;" value="🤖  RAG INTEGRATION — Rotas e Artefatos&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Nova rota: POST /rag/query&#xa;  Input:  {cluster_id, segmento, pergunta}&#xa;  Lookup: Vector Store (FAISS/pgvector)&#xa;  Filtro metadata: segmento + cluster_id&#xa;  Output: resposta LLM + docs recuperados&#xa;&#xa;Artefatos S3 adicionais:&#xa;  profile_cards.json  → label, features, propensão&#xa;  cluster_profiles/   → docs .md por cluster (base RAG)&#xa;&#xa;Response /predict ampliado:&#xa;  + cluster_id · perfil_label · segmento (PF|PJ)&#xa;&#xa;Métricas RAG monitoradas no CloudWatch:&#xa;  Faithfulness ≥ 0.85 · Retrieval@5 ≥ 0.80&#xa;  ContextPrecision ≥ 0.75 · Docs/perfil ≥ 5" vertex="1">
+          <mxGeometry height="290" width="440" x="2080" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="glossary_acronyms" parent="1" style="text;html=1;strokeColor=#3b82f6;fillColor=#eff6ff;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=5;fontSize=11;fontFamily=Arial;shadow=1;" value="&lt;div style=&quot;font-family:Arial, sans-serif; padding:12px;&quot;&gt;&lt;div style=&quot;font-size:13px; font-weight:bold; color:#1e3a5f; border-bottom:2px solid #3b82f6; padding-bottom:6px; margin-bottom:10px;&quot;&gt;📖 GLOSSÁRIO DE SIGLAS&lt;/div&gt;&lt;table style=&quot;width:100%; border-collapse:collapse; font-size:11px;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ALB&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Application Load Balancer — balanceador de carga HTTP/HTTPS (AWS)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;API&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Application Programming Interface — interface de comunicação entre serviços&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ARN&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Amazon Resource Name — identificador único de recurso AWS&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ASGI&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Asynchronous Server Gateway Interface — padrão async Python (uvicorn)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;AWS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Amazon Web Services — plataforma de cloud computing&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;DAG&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Directed Acyclic Graph — grafo de orquestração (SageMaker Pipelines)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ECR&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Elastic Container Registry — registro de imagens Docker (AWS)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ECS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Elastic Container Service — orquestração de containers Fargate (AWS)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;EDA&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Exploratory Data Analysis — análise exploratória dos dados&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ETL&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Extract, Transform, Load — pipeline de ingestão de dados (AWS Glue)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;FAISS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Facebook AI Similarity Search — biblioteca de busca vetorial eficiente&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;GBM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Gradient Boosting Machine — modelo de classificação de churn (sklearn)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;IAM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Identity and Access Management — controle de permissões AWS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;LLM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Large Language Model — modelo de linguagem (ex.: GPT, Claude, Gemini)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PCA&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Principal Component Analysis — redução de dimensionalidade para visualização&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PF&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Pessoa Física — segmento de clientes individuais&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PJ&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Pessoa Jurídica — segmento de clientes empresariais&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;RAG&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Retrieval-Augmented Generation — geração de texto com contexto recuperado&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ROC&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Receiver Operating Characteristic — Área sob a curva (meta ≥ 0.70)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;SDK&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Software Development Kit — kit de desenvolvimento (ex.: boto3, sagemaker)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;SNS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Simple Notification Service — serviço de alertas e notificações (AWS)&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;WORM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Write Once Read Many — política de S3 Object Lock para auditoria imutável&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="336" width="2600" x="40" y="1330" as="geometry" />
+        </mxCell>
+    </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,6 +1,6 @@
 # Pipeline MLOps Completo — Previsão de Churn de Clientes
 
-> **Stack:** Python · Scikit-Learn · FastAPI · Docker · GitHub Actions  
+> **Stack:** Python · Scikit-Learn · FastAPI · Docker · GitHub Actions · AWS Glue · AWS SageMaker  
 > **Caso de uso:** Classificação binária — o cliente vai cancelar o contrato?
 
 ---
@@ -13,7 +13,9 @@
 4. [Containerização com Docker](#4-containerização-com-docker)
 5. [CI/CD com GitHub Actions](#5-cicd-com-github-actions)
 6. [Como Executar Localmente](#6-como-executar-localmente)
-7. [Referências e Conceitos-chave](#7-referências-e-conceitos-chave)
+7. [Clusterização — Segmentação de Clientes](#7-clusterização--segmentação-de-clientes)
+8. [Variante AWS — Glue + SageMaker](#8-variante-aws--glue--sagemaker)
+9. [Referências e Conceitos-chave](#9-referências-e-conceitos-chave)
 
 ---
 
@@ -33,12 +35,24 @@ churn-mlops/
 │
 ├── models/                     ← Repositório de artefatos (gerados pelo treino)
 │   ├── model.pkl               ← Pipeline scikit-learn serializado
-│   └── metadata.json           ← Rastreabilidade: versão, métricas, features
+│   ├── metadata.json           ← Rastreabilidade: versão, métricas, features
+│   ├── cluster_report.json     ← Métricas e perfis dos clusters
+│   ├── elbow_curve.png         ← Gráfico do Elbow Method
+│   ├── silhouette_plot.png     ← Gráfico de Silhouette por cluster
+│   └── pca_clusters.png        ← Projeção 2D dos clusters via PCA
 │
 ├── tests/
-│   └── test_model.py           ← Testes de validação: modelo + API
+│   ├── test_model.py           ← Testes de validação: modelo + API
+│   └── test_clustering.py      ← Testes de validação: clusterização
 │
-├── train.py                    ← Script de treinamento
+├── aws/
+│   ├── glue_etl_job.py             ← ETL Spark serverless (AWS Glue)
+│   ├── train_sagemaker.py          ← Training Job (SageMaker)
+│   ├── evaluate.py                 ← Avaliação formal p/ Model Registry
+│   └── sagemaker_pipeline.py       ← Orquestrador do pipeline AWS
+│
+├── clustering_analysis.py     ← Segmentação não supervisionada (K-Means)
+├── train.py                    ← Script de treinamento (local)
 ├── Dockerfile                  ← Containerização da API + modelo
 ├── requirements.txt            ← Dependências com versões fixadas
 ├── .gitignore
@@ -52,6 +66,7 @@ churn-mlops/
 | `app/` | Código de serving (produção) | Docker, Kubernetes |
 | `models/` | Artefatos versionados | API, CI/CD, Model Registry |
 | `tests/` | Validação automática | GitHub Actions |
+| `aws/` | Pipeline gerenciado na nuvem | SageMaker, Glue |
 | `.github/workflows/` | Automação de pipeline | GitHub Actions Runner |
 
 ---
@@ -326,6 +341,10 @@ pip install -r requirements.txt
 # 4. Treinar o modelo
 python train.py
 
+# 4b. (Opcional) Gerar segmentação de clientes
+python clustering_analysis.py
+# Gera: models/cluster_report.json, elbow_curve.png, silhouette_plot.png, pca_clusters.png
+
 # 5. Executar os testes
 pytest tests/ -v
 
@@ -339,7 +358,268 @@ docker run -p 8000:8000 churn-api:latest
 
 ---
 
-## 7. Referências e Conceitos-chave
+## 7. Clusterização — Segmentação de Clientes
+
+O script `clustering_analysis.py` complementa o pipeline supervisionado com **aprendizado não supervisionado**: em vez de prever churn, identifica *perfis naturais de comportamento* sem usar os rótulos.
+
+### Usos no pipeline MLOps
+
+| Etapa | Como a clusterização ajuda |
+|---|---|
+| **Exploração** | Entender grupos antes de treinar o classificador |
+| **Feature Engineering** | Usar o `cluster_id` como feature adicional no `train.py` |
+| **Monitoramento** | Detectar clientes que não se encaixam em nenhum perfil histórico (concept drift) |
+
+### Métricas geradas
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  MÉTRICAS DE CLUSTERIZAÇÃO                               │
+├──────────────────┬──────────────────┬───────────────────┤
+│  INTERNAS         │  EXTERNAS         │  ESCOLHA DO K       │
+│  (sem gabarito)   │  (com rótulo)    │                     │
+│                  │                  │                     │
+│  Silhouette       │  ARI             │  Elbow Method       │
+│  Davies-Bouldin   │  Homogeneidade   │                     │
+│  Calinski-        │  (≈ Precision)   │                     │
+│  Harabasz         │  Completude      │                     │
+│                  │  (≈ Recall)      │                     │
+│                  │  V-Measure       │                     │
+│                  │  (≈ F1-Score)    │                     │
+└──────────────────┴──────────────────┴───────────────────┘
+```
+
+### Analogia com classificação
+
+| Classificação | Clusterização | Interpretação |
+|---|---|---|
+| Precision | Homogeneidade | Clusters puros? Cada um contém só uma classe? |
+| Recall | Completude | Classes concentradas? Todos os churners juntos? |
+| F1-Score | V-Measure | Equilíbrio entre homogeneidade e completude |
+| ROC-AUC | Silhouette | Qualidade geral de separação |
+| Threshold | Elbow Method | Escolha do número ideal de clusters (K) |
+
+### Arquivos gerados
+
+```bash
+python clustering_analysis.py
+```
+
+```
+models/
+├── cluster_report.json    ← Métricas + perfis de cada cluster
+├── elbow_curve.png        ← Inércia por K (encontra o cotovelo)
+├── silhouette_plot.png    ← Qualidade individual de cada ponto
+└── pca_clusters.png       ← Projeção 2D para inspecção visual
+```
+
+### Exemplo de saída do `cluster_report.json`
+
+```json
+{
+  "chosen_k": 2,
+  "metrics": {
+    "internal": {
+      "silhouette_score": 0.6821,
+      "davies_bouldin_index": 0.4903,
+      "calinski_harabasz_score": 1847.3
+    },
+    "external": {
+      "adjusted_rand_index": 0.9134,
+      "homogeneity": 0.8976,
+      "completeness": 0.8891,
+      "v_measure": 0.8933
+    }
+  },
+  "cluster_profiles": {
+    "cluster_0": {
+      "n_samples": 1023,
+      "churn_rate": 0.04,
+      "risk_label": "BAIXO RISCO"
+    },
+    "cluster_1": {
+      "n_samples": 977,
+      "churn_rate": 0.96,
+      "risk_label": "ALTO RISCO"
+    }
+  }
+}
+```
+
+### Validação automática no CI
+
+O arquivo `tests/test_clustering.py` valida o `cluster_report.json` a cada push:
+
+| Teste | O que previne |
+|---|---|
+| `silhouette >= 0.3` | Clusters sem separação útil |
+| `davies_bouldin < 1.5` | Clusters sobrepostos |
+| `v_measure >= 0.5` | Clusterização descorrelacionada do churn |
+| Perfil ALTO RISCO existe | Modelo não discrimina churners |
+| Inércia monomótona | Erro no cálculo do Elbow |
+| Gráficos PNG gerados | Falha silenciosa na visualização |
+
+---
+
+## 8. Variante AWS — Glue + SageMaker
+
+Os arquivos em `aws/` transpõem o mesmo pipeline para serviços gerenciados da AWS, sem alterar a lógica de ML.
+
+### Arquitetura
+
+```
+Dado Bruto (S3)
+    │
+    ▼
+┌──────────────────────────────────────┐
+│  AWS GLUE (glue_etl_job.py)          │
+│  Spark serverless — escala para TB   │
+│  · Lê CSV particionado do S3         │
+│  · Trata nulos e duplicatas          │
+│  · Feature engineering               │
+│  · Split treino/teste estratificado  │
+│  · Salva Parquet comprimido no S3    │
+└────────────────┬─────────────────────┘
+                 │ Parquet limpo
+                 ▼
+┌──────────────────────────────────────┐
+│  SAGEMAKER PIPELINES                 │
+│  (sagemaker_pipeline.py)             │
+│                                      │
+│  Step 1 ─ ProcessingStep (ETL)       │
+│  Step 2 ─ TrainingStep               │ ← ml.m5.xlarge automático
+│             train_sagemaker.py       │
+│  Step 3 ─ EvaluationStep             │
+│             evaluate.py              │
+│  Step 4 ─ ConditionStep              │ ← Bloqueia se ROC-AUC < 0.75
+│             RegisterModel            │ → SageMaker Model Registry
+└────────────────┬─────────────────────┘
+                 │ modelo aprovado
+                 ▼
+┌──────────────────────────────────────┐
+│  SAGEMAKER ENDPOINT                  │
+│  · Real-time, AutoScaling gerenciado │
+│  · DataCapture para drift monitoring │
+│  · Substitui o FastAPI+Docker local  │
+└──────────────────────────────────────┘
+```
+
+### Comparativo: local vs AWS
+
+| Componente | Local | AWS |
+|---|---|---|
+| **ETL** | `pandas` em memória | **AWS Glue** (Spark distribuído) |
+| **Treinamento** | `python train.py` | **SageMaker Training Job** |
+| **Artefato** | `models/model.pkl` | **S3** + **Model Registry** versionado |
+| **CI/CD** | GitHub Actions `ci.yml` | **SageMaker Pipelines** (DAG nativo) |
+| **Serving** | FastAPI + Docker | **SageMaker Endpoint** + AutoScaling |
+| **Monitoramento** | Logs do container | **CloudWatch** + **Model Monitor** |
+
+### Descrição dos arquivos
+
+#### `aws/glue_etl_job.py` — ETL com AWS Glue
+Substitui a geração sintética de dados do `train.py`. Conecta-se a fontes reais no S3, executa transformações Spark serverless (sem servidor para gerenciar) e entrega dados limpos em Parquet para o SageMaker.
+
+Pontos principais:
+- **DynamicFrame** do Glue lida com esquemas inconsistentes entre registros
+- Deduplicação por `customer_id` com `Window` function
+- **Data Quality Gate** sinaliza registros fora de range sem removê-los (auditoria)
+- Feature engineering derivada (taxa de chamados, receita por produto)
+- Split treino/teste estratificado diretamente no Spark
+
+#### `aws/train_sagemaker.py` — Training Job
+Equivalente ao `train.py` local, adaptado para o ambiente do SageMaker. **A lógica do Pipeline scikit-learn é idêntica** — a diferença está nas convenções de I/O:
+
+```
+/opt/ml/
+├── input/data/
+│   ├── train/    ← Dados injetados do S3 pelo SageMaker
+│   └── test/
+├── model/        ← Artefato salvo aqui é enviado para S3 automaticamente
+└── output/failure
+```
+
+Hiperparâmetros chegam como argumentos de linha de comando (`--n-estimators 200`), permitindo que o **SageMaker Hyperparameter Tuning (HPO)** execute múltiplas variações automaticamente buscando o melhor ROC-AUC.
+
+#### `aws/evaluate.py` — Avaliação formal
+Executado como `ProcessingStep` após o treinamento. Gera o `evaluation.json` no formato exigido pelo **SageMaker Model Registry**, que vincula as métricas (ROC-AUC, F1, Avg-Precision) ao Model Package para auditoria e comparação de versões.
+
+#### `aws/sagemaker_pipeline.py` — Orquestrador
+Equivalente ao `ci.yml` do GitHub Actions, porém como código Python. Define o DAG completo com parâmetros configuráveis:
+
+```python
+# Parâmetros do pipeline (ajustáveis sem alterar código)
+param_roc_auc_threshold = ParameterFloat(name="RocAucThreshold", default_value=0.75)
+param_n_estimators      = ParameterInteger(name="NEstimators",    default_value=200)
+
+# Executa com parâmetros diferentes sem redeployar o pipeline
+execution = pipeline.start(parameters={"RocAucThreshold": 0.80})
+```
+
+O `ConditionStep` bloqueia o registro no Model Registry se o ROC-AUC estiver abaixo do threshold — equivalente ao teste `test_metadata_roc_auc_above_threshold` do `tests/test_model.py`, mas nativo na nuvem.
+
+### Como executar
+
+```bash
+# Instala dependências AWS
+pip install sagemaker boto3
+
+# Configura credenciais
+aws configure
+
+# Edite as variáveis no topo do arquivo:
+#   BUCKET_NAME, ROLE_ARN, AWS_REGION
+vim aws/sagemaker_pipeline.py
+
+# Registra e executa o pipeline
+python aws/sagemaker_pipeline.py
+```
+
+> **Pré-requisitos:** conta AWS com SageMaker e Glue habilitados, IAM Role com `AmazonSageMakerFullAccess` e bucket S3 criado.
+
+---
+
+## 9. Diagrama CRISP-DM — BPMN
+
+O arquivo [`docs/crisp_dm_bpmn_pipeline.drawio`](docs/crisp_dm_bpmn_pipeline.drawio) contém o diagrama completo do pipeline com **notação BPMN** seguindo o modelo **CRISP-DM**.
+
+### Como abrir
+1. Acesse [draw.io](https://app.diagrams.net/) → **File → Open from → Device** → selecione o arquivo; ou
+2. Com a extensão **hediet.vscode-drawio** no VS Code, abra o `.drawio` diretamente.
+
+### Estrutura do diagrama (raias / pools BPMN)
+
+| Raia | Fase CRISP-DM | Componentes principais |
+|------|--------------|------------------------|
+| Negócio | Business Understanding | KPIs, threshold ROC-AUC, aprovação |
+| Entendimento de Dados | Data Understanding | EDA, K-Means exploratório, Elbow, Silhouette |
+| Preparação de Dados | Data Preparation | AWS Glue ETL, Feature Engineering |
+| **Feature Store** ★ | Data Preparation | Offline Store (S3), Online Store (Redis), Feature Registry |
+| Modelagem | Modeling | `train.py`, sklearn Pipeline (Scaler+GBM), HPO, CV 5-fold |
+| CI/CD | Evaluation | GitHub Actions, ruff, pytest, docker build, smoke test |
+| Deploy | Deployment | FastAPI + Docker, SageMaker Endpoint, Blue/Green Rollout |
+| **Drift Detection** ★ | Monitoring | Data Drift (KS/PSI), Concept Drift, Prediction Drift, Feature Drift |
+| Loop de Retreino | Deployment→Understanding | Trigger automático, atualiza Feature Store, promove Challenger |
+
+> ★ = componentes **não presentes nos arquivos locais**, contemplados no diagrama como extensões MLOps ao CRISP-DM original (Feature Store via AWS SageMaker Feature Store / Redis; Drift Detection via SageMaker Model Monitor / Evidently AI).
+
+### Verificação: Feature Store e Drift Detection
+
+**Feature Store** — representado como subprocesso dedicado entre Data Preparation e Modeling:
+- **Offline Store**: features históricas em S3 Parquet para treinamento reprodutível
+- **Online Store**: lookup em tempo real (`< 20ms`) durante inferência no `/predict`
+- **Feature Registry**: versão, schema, lineage e estatísticas de referência — base para detecção de derivação
+
+**Drift Detection** — representado como raia autônoma pós-Deployment com gateway de decisão:
+- **Data Drift**: distribuição das features de entrada diverge do treinamento (KS Test, PSI, χ²)
+- **Concept Drift**: relação `X → y` mudou no mundo real (monitor de ROC-AUC em janelas 7d / 30d)
+- **Prediction Drift**: taxa de churn prevista diverge do baseline pós-deploy
+- **Feature Store Drift** ★: estatísticas atuais comparadas ao snapshot do Feature Registry — detecta problemas na origem dos dados
+- Gateway de decisão: Drift detectado → Alerta (CloudWatch / Slack) + Trigger automático de retreino → Loop CRISP-DM
+
+---
+
+## 10. Referências e Conceitos-chave
 
 ### Data-Leakage
 A causa mais comum de modelos que performam bem no experimento mas falham em produção. Ocorre quando informações do futuro ou do conjunto de teste contaminam o treinamento. A `Pipeline` do scikit-learn é a principal ferramenta de prevenção para pipelines tabulares.

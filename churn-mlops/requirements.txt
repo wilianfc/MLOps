@@ -25,6 +25,9 @@ httpx==0.27.0           # Cliente HTTP assíncrono (usado nos testes)
 # --- [3] Serialização --------------------------------------------------
 # pickle é built-in do Python — não requer instalação separada
 
-# --- [4] Testes --------------------------------------------------------
+# --- [4] Visualizações ------------------------------------------------
+matplotlib==3.9.1       # Gráficos de clusterização (Elbow, Silhouette, PCA)
+
+# --- [5] Testes --------------------------------------------------------
 pytest==8.2.2
 pytest-asyncio==0.23.7

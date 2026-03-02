@@ -1,0 +1,544 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2">
+  <diagram id="crisp-dm-bpmn" name="CRISP-DM MLOps Pipeline">
+    <mxGraphModel dx="1042" dy="626" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3500" pageHeight="2000" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1e3a5f;fontFamily=Arial;" value="Pipeline MLOps — CRISP-DM com Notação BPMN&#xa;Churn Prediction | Feature Store + Drift Detection" vertex="1">
+          <mxGeometry height="50" width="1200" x="800" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_business" parent="1" style="pool;html=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=12;fontStyle=1;collapsible=0;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Negócio / Stakeholders" vertex="1">
+          <mxGeometry height="120" width="3400" x="50" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="b_start" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Identificar&lt;br&gt;Problema/métricas de interesse.&amp;nbsp;&lt;div&gt;Ex: Churn&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75" width="100" x="60" y="122" as="geometry" />
+        </mxCell>
+        <mxCell id="b_objective" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Definir KPIs&#xa;e Threshold&#xa;Aceitável" vertex="1">
+          <mxGeometry height="50" width="120" x="220" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="b_approve" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Aprovar&#xa;Modelo para&#xa;Produção?" vertex="1">
+          <mxGeometry height="80" width="110" x="2650" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="b_monitor" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Monitorar&#xa;KPIs de&#xa;Negócio" vertex="1">
+          <mxGeometry height="50" width="120" x="3170" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="e_b1" edge="1" parent="1" source="b_start" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="b_objective">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_b2" edge="1" parent="1" source="b_approve" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="b_monitor">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2760" y="160" />
+              <mxPoint x="2760" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_b_label" connectable="0" parent="e_b2" style="edgeLabel;html=1;fontSize=10;fontStyle=1;fillColor=none;strokeColor=none;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Sim" vertex="1">
+          <mxGeometry relative="1" x="0.5" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_crisp1" parent="1" style="pool;html=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=12;fontStyle=1;collapsible=0;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="CRISP-DM: Entendimento do Negócio + Dados" vertex="1">
+          <mxGeometry height="160" width="3400" x="50" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_start" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dcfce7;strokeColor=#22c55e;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="80" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_sources" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Mapear Fontes&#xa;de Dados&#xa;(S3, RDS, CRM)" vertex="1">
+          <mxGeometry height="50" width="130" x="170" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_eda" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="EDA + Análise&#xa;Exploratória&#xa;(Pandas, Spark)" vertex="1">
+          <mxGeometry height="50" width="130" x="360" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_cluster" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Clusterização&#xa;Exploratória (PF/PJ)&#xa;K-Means · DBSCAN&#xa;Elbow + Silhouette&#xa;Davies-Bouldin" vertex="1">
+          <mxGeometry height="60" width="130" x="550" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_quality" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Avaliar Qualidade&#xa;dos Dados&#xa;(Completude, Range)" vertex="1">
+          <mxGeometry height="50" width="130" x="740" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_feasibility" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Viável?&#xa;(Dados suficientes,&#xa;Churn Rate &gt; 5%)" vertex="1">
+          <mxGeometry height="70" width="130" x="930" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_end" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dcfce7;strokeColor=#22c55e;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="1120" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_1" edge="1" parent="1" source="c1_start" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c1_sources">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_2" edge="1" parent="1" source="c1_sources" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c1_eda">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_3" edge="1" parent="1" source="c1_eda" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c1_cluster">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_4" edge="1" parent="1" source="c1_cluster" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c1_quality">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_5" edge="1" parent="1" source="c1_quality" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c1_feasibility">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_6" edge="1" parent="1" source="c1_feasibility" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c1_end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_label" connectable="0" parent="e_c1_6" style="edgeLabel;html=1;fontSize=10;fontStyle=1;fillColor=none;strokeColor=none;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Sim" vertex="1">
+          <mxGeometry relative="1" x="0.5" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_crisp2" parent="1" style="pool;html=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#fef9c3;strokeColor=#eab308;fontSize=12;fontStyle=1;collapsible=0;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="CRISP-DM: Preparação dos Dados + Feature Store" vertex="1">
+          <mxGeometry height="220" width="3400" x="50" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_glue" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" value="🔧 AWS Glue ETL&#xa;glue_etl_job.py&#xa;Spark Serverless" vertex="1">
+          <mxGeometry height="60" width="140" x="80" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_clean" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Limpeza&#xa;Dedup + Nulos&#xa;Range Check" vertex="1">
+          <mxGeometry height="50" width="120" x="280" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_fe" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Feature&#xa;Engineering&#xa;avg_revenue,&#xa;support_rate,&#xa;is_new_customer" vertex="1">
+          <mxGeometry height="70" width="130" x="460" y="435" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_fs_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;dashed=1;dashPattern=8 4;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="160" width="400" x="640" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_fs_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=12;fontStyle=1;fontColor=#b85450;fontFamily=Arial;" value="🗄️  FEATURE STORE" vertex="1">
+          <mxGeometry height="25" width="180" x="750" y="425" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_fs_write" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Escrever Features&#xa;(Offline Store /&#xa;S3 Parquet)" vertex="1">
+          <mxGeometry height="50" width="130" x="660" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_fs_registry" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Feature Registry&#xa;(Versão, Schema,&#xa;Lineage, Stats)" vertex="1">
+          <mxGeometry height="50" width="130" x="810" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_fs_online" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Online Store&#xa;(Redis / DynamoDB)&#xa;Latência &lt; 20ms" vertex="1">
+          <mxGeometry height="50" width="140" x="885" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_split" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Split Treino/Teste&#xa;Stratified&#xa;(80/20)" vertex="1">
+          <mxGeometry height="50" width="130" x="1100" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_leakage" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" value="⚠️ Validar&#xa;Data-Leakage&#xa;(Sem fit no teste)" vertex="1">
+          <mxGeometry height="50" width="130" x="1290" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2_1" edge="1" parent="1" source="c2_glue" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c2_clean">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2_2" edge="1" parent="1" source="c2_clean" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c2_fe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2_3" edge="1" parent="1" source="c2_fe" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c2_fs_write">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2_4" edge="1" parent="1" source="c2_fs_write" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c2_fs_registry">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2_5" edge="1" parent="1" source="c2_fs_registry" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c2_fs_online">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="955" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_c2_6" edge="1" parent="1" source="c2_fs_write" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c2_split">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="725" y="410" />
+              <mxPoint x="1165" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_c2_7" edge="1" parent="1" source="c2_split" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c2_leakage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_crisp3" parent="1" style="pool;html=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=12;fontStyle=1;collapsible=0;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="CRISP-DM: Modelagem" vertex="1">
+          <mxGeometry height="200" width="3400" x="50" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_pipeline" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" value="sklearn Pipeline&#xa;StandardScaler&#xa;+ GBM&#xa;(train.py)" vertex="1">
+          <mxGeometry height="70" width="130" x="80" y="665" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_cv" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Cross-Validation&#xa;5-fold Stratificado&#xa;ROC-AUC" vertex="1">
+          <mxGeometry height="60" width="130" x="270" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_hpo" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Hyperparameter&#xa;Tuning&#xa;(SM HPO /&#xa;GridSearch)" vertex="1">
+          <mxGeometry height="70" width="130" x="460" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_metrics" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Avaliar Métricas&#xa;ROC-AUC, F1&#xa;Precision, Recall&#xa;Confusion Matrix" vertex="1">
+          <mxGeometry height="70" width="130" x="650" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_threshold" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Threshold OK?&#xa;ROC-AUC ≥ 0.70&#xa;Silhouette ≥ 0.40&#xa;ARI ≥ 0.85&#xa;Coverage ≥ 95%" vertex="1">
+          <mxGeometry height="80" width="140" x="840" y="655" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_artifact" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Serializar&#xa;model.pkl&#xa;+ metadata.json" vertex="1">
+          <mxGeometry height="60" width="130" x="1050" y="665" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_registry" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Model Registry&#xa;(SageMaker /&#xa;MLflow)&#xa;PendingApproval" vertex="1">
+          <mxGeometry height="70" width="130" x="1250" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c3_1" edge="1" parent="1" source="c3_pipeline" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c3_cv">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c3_2" edge="1" parent="1" source="c3_cv" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c3_hpo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c3_3" edge="1" parent="1" source="c3_hpo" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c3_metrics">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c3_4" edge="1" parent="1" source="c3_metrics" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c3_threshold">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c3_5" edge="1" parent="1" source="c3_threshold" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c3_artifact">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c3_5l" connectable="0" parent="e_c3_5" style="edgeLabel;html=1;fontSize=10;fontStyle=1;fillColor=none;strokeColor=none;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Aprovado" vertex="1">
+          <mxGeometry relative="1" x="0.5" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c3_6" edge="1" parent="1" source="c3_artifact" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="c3_registry">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_retrain_label" parent="1" style="text;html=1;fontSize=9;fontColor=#b85450;fontStyle=2;fontFamily=Arial;" value="Reprovar →&#xa;Ajustar Features&#xa;ou Modelo" vertex="1">
+          <mxGeometry height="40" width="130" x="850" y="755" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_cicd" parent="1" style="pool;html=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=12;fontStyle=1;collapsible=0;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="CI/CD — GitHub Actions / SageMaker Pipelines" vertex="1">
+          <mxGeometry height="180" width="3400" x="50" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_trigger" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="⚡ Trigger&#xa;git push /&#xa;schedule" vertex="1">
+          <mxGeometry height="70" width="90" x="80" y="875" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_lint" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Lint + Ruff&#xa;Code Quality" vertex="1">
+          <mxGeometry height="50" width="110" x="230" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_train" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="python train.py&#xa;Retreino&#xa;Reprodutível" vertex="1">
+          <mxGeometry height="50" width="110" x="400" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_cluster_step" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="python clustering&#xa;_analysis.py&#xa;Segmentação" vertex="1">
+          <mxGeometry height="50" width="110" x="570" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_tests" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="pytest tests/&#xa;test_model.py&#xa;test_clustering.py" vertex="1">
+          <mxGeometry height="50" width="120" x="740" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_docker" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="docker build&#xa;Smoke Test&#xa;/health + /predict" vertex="1">
+          <mxGeometry height="50" width="120" x="920" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="ci_artifacts" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Upload Artifacts&#xa;model.pkl · metadata.json&#xa;cluster_report.json · PNGs&#xa;profile_cards.json (PF+PJ)&#xa;cluster_profiles/ docs RAG" vertex="1">
+          <mxGeometry height="60" width="120" x="1100" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ci_1" edge="1" parent="1" source="ci_trigger" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="ci_lint">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ci_2" edge="1" parent="1" source="ci_lint" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="ci_train">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ci_3" edge="1" parent="1" source="ci_train" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="ci_cluster_step">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ci_4" edge="1" parent="1" source="ci_cluster_step" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="ci_tests">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ci_5" edge="1" parent="1" source="ci_tests" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="ci_docker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ci_6" edge="1" parent="1" source="ci_docker" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="ci_artifacts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_deploy" parent="1" style="pool;html=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=12;fontStyle=1;collapsible=0;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Deploy — ⓐ ECS Fargate (Online API) · XOR · ⓑ SageMaker Endpoint (Batch / Experimento)" vertex="1">
+          <mxGeometry height="180" width="3400" x="50" y="1020" as="geometry" />
+        </mxCell>
+        <mxCell id="d_approval" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Aprovação Manual&#xa;Model Registry&#xa;Champion vs&#xa;Challenger" vertex="1">
+          <mxGeometry height="70" width="130" x="80" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="d_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="docker build&#xa;API FastAPI +&#xa;model.pkl&#xa;(Dockerfile)" vertex="1">
+          <mxGeometry height="60" width="130" x="280" y="1065" as="geometry" />
+        </mxCell>
+        <mxCell id="d_endpoint_sm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="&#xa;ⓑ SageMaker&#xa;Endpoint&#xa;ml.t3.medium&#xa;(Batch / Experimento)" vertex="1">
+          <mxGeometry height="70" width="130" x="530" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="d_fastapi" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="&#xa;ⓐ FastAPI /predict&#xa;ECS Fargate&#xa;Online Store&#xa;(Feature Lookup)" vertex="1">
+          <mxGeometry height="70" width="130" x="680" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="d_shadow" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Shadow Deploy&#xa;A/B Testing&#xa;Champion vs&#xa;Challenger" vertex="1">
+          <mxGeometry height="70" width="130" x="880" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="d_rollout" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Blue/Green&#xa;Rollout&#xa;Canary 10%→50%&#xa;→100%" vertex="1">
+          <mxGeometry height="60" width="130" x="1080" y="1065" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d_1" edge="1" parent="1" source="d_approval" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="d_container">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="d_gw_xor" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=9;fontFamily=Arial;fontStyle=1;shadow=1;" value="XOR" vertex="1">
+          <mxGeometry height="44" width="44" x="422" y="1073" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d_xor" edge="1" parent="1" source="d_container" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="d_gw_xor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d_2" edge="1" parent="1" source="d_gw_xor" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;strokeColor=#eab308;fontColor=#92400e;fontSize=9;" target="d_endpoint_sm" value="ⓑ SageMaker&#xa;(Batch/Exp.)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d_3" edge="1" parent="1" source="d_gw_xor" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;strokeColor=#3b82f6;fontColor=#1e40af;fontSize=9;" target="d_fastapi" value="ⓐ ECS Fargate&#xa;(Online API)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="444" y="1170" />
+              <mxPoint x="745" y="1170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_d_4" edge="1" parent="1" source="d_fastapi" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="d_shadow">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d_5" edge="1" parent="1" source="d_shadow" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="d_rollout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fs_to_api" edge="1" parent="1" source="c2_fs_online" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#b85450;fontColor=#b85450;fontSize=9;fontFamily=Arial;strokeWidth=2;" target="d_fastapi" value="Lookup Online&#xa;Features">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1070" y="545" />
+              <mxPoint x="1070" y="1000" />
+              <mxPoint x="745" y="1000" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pool_monitor" parent="1" style="pool;html=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#ffedd5;strokeColor=#f97316;fontSize=12;fontStyle=1;collapsible=0;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="CRISP-DM: Avaliação + Monitoramento + Drift Detection" vertex="1">
+          <mxGeometry height="260" width="3400" x="50" y="1210" as="geometry" />
+        </mxCell>
+        <mxCell id="m_datacapture" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Data Capture&#xa;SageMaker&#xa;20% Sampling&#xa;→ S3" vertex="1">
+          <mxGeometry height="70" width="130" x="80" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="m_drift_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;dashed=1;dashPattern=8 4;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="200" width="800" x="270" y="1245" as="geometry" />
+        </mxCell>
+        <mxCell id="m_drift_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=13;fontStyle=1;fontColor=#d6b656;fontFamily=Arial;" value="🔴  DRIFT DETECTION" vertex="1">
+          <mxGeometry height="25" width="260" x="540" y="1248" as="geometry" />
+        </mxCell>
+        <mxCell id="m_data_drift" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Data Drift&#xa;(Feature Drift)&#xa;KS Test / PSI&#xa;Comparar dist. treino&#xa;vs produção" vertex="1">
+          <mxGeometry height="80" width="145" x="290" y="1275" as="geometry" />
+        </mxCell>
+        <mxCell id="m_concept_drift" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Concept Drift&#xa;(Label/Target Shift)&#xa;Monitor ROC-AUC&#xa;em janelas de tempo&#xa;(7d, 30d)" vertex="1">
+          <mxGeometry height="80" width="145" x="455" y="1275" as="geometry" />
+        </mxCell>
+        <mxCell id="m_pred_drift" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Prediction Drift&#xa;(Output Shift)&#xa;Monitor churn_rate&#xa;na janela de predição&#xa;vs baseline" vertex="1">
+          <mxGeometry height="80" width="145" x="620" y="1275" as="geometry" />
+        </mxCell>
+        <mxCell id="m_feature_drift" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Feature Store Drift&#xa;Comparar estatísticas&#xa;das features atuais&#xa;vs snapshot do treino&#xa;(Feature Registry)" vertex="1">
+          <mxGeometry height="80" width="160" x="790" y="1275" as="geometry" />
+        </mxCell>
+        <mxCell id="m_drift_gate" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ff8000;strokeColor=#d6b656;fontSize=10;fontColor=#ffffff;fontStyle=1;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Drift&#xa;Detectado?" vertex="1">
+          <mxGeometry height="80" width="130" x="1130" y="1255" as="geometry" />
+        </mxCell>
+        <mxCell id="m_alert" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;arcSize=10;" value="🔔 Alerta&#xa;CloudWatch /&#xa;Slack / PagerDuty" vertex="1">
+          <mxGeometry height="60" width="130" x="1330" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="m_dashboard" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="📊 Dashboard&#xa;Grafana /&#xa;CloudWatch&#xa;KPIs em tempo real" vertex="1">
+          <mxGeometry height="60" width="130" x="1530" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="m_retrain_trigger" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontStyle=1;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="⚡ Trigger&#xa;Retreino&#xa;Automático" vertex="1">
+          <mxGeometry height="70" width="130" x="1330" y="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_1" edge="1" parent="1" source="m_datacapture" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="m_data_drift">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_2" edge="1" parent="1" source="m_data_drift" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="m_concept_drift">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_3" edge="1" parent="1" source="m_concept_drift" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="m_pred_drift">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_4" edge="1" parent="1" source="m_pred_drift" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="m_feature_drift">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_5" edge="1" parent="1" source="m_feature_drift" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="m_drift_gate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_6" edge="1" parent="1" source="m_drift_gate" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="m_alert">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_6l" connectable="0" parent="e_m_6" style="edgeLabel;html=1;fontSize=10;fontStyle=1;fillColor=none;strokeColor=none;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Sim" vertex="1">
+          <mxGeometry relative="1" x="0.5" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_7" edge="1" parent="1" source="m_alert" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="m_dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m_8" edge="1" parent="1" source="m_alert" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="m_retrain_trigger">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_retrain" parent="1" style="pool;html=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=12;fontStyle=1;collapsible=0;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Loop de Retreino — CRISP-DM Retorno" vertex="1">
+          <mxGeometry height="140" width="3400" x="50" y="1480" as="geometry" />
+        </mxCell>
+        <mxCell id="r_trigger" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Trigger de&#xa;Retreino&#xa;(Manual / Auto)" vertex="1">
+          <mxGeometry height="70" width="110" x="80" y="1515" as="geometry" />
+        </mxCell>
+        <mxCell id="r_fs_refresh" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Atualizar&#xa;Feature Store&#xa;(novos dados)" vertex="1">
+          <mxGeometry height="50" width="130" x="260" y="1525" as="geometry" />
+        </mxCell>
+        <mxCell id="r_retrain" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Retreinar Pipeline&#xa;train.py /&#xa;SageMaker Job" vertex="1">
+          <mxGeometry height="50" width="130" x="460" y="1525" as="geometry" />
+        </mxCell>
+        <mxCell id="r_evaluate" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Comparar com&#xa;Champion&#xa;ROC-AUC" vertex="1">
+          <mxGeometry height="50" width="130" x="660" y="1525" as="geometry" />
+        </mxCell>
+        <mxCell id="r_promote" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontSize=10;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Promover&#xa;Challenger&#xa;→ Champion?" vertex="1">
+          <mxGeometry height="80" width="130" x="860" y="1510" as="geometry" />
+        </mxCell>
+        <mxCell id="r_deploy_new" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=10;fontFamily=Arial;shadow=1;arcSize=10;" value="Deploy Novo&#xa;Champion" vertex="1">
+          <mxGeometry height="50" width="130" x="1060" y="1525" as="geometry" />
+        </mxCell>
+        <mxCell id="r_end" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fee2e2;strokeColor=#ef4444;strokeWidth=3;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="1260" y="1530" as="geometry" />
+        </mxCell>
+        <mxCell id="e_r_1" edge="1" parent="1" source="r_trigger" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="r_fs_refresh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_r_2" edge="1" parent="1" source="r_fs_refresh" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="r_retrain">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_r_3" edge="1" parent="1" source="r_retrain" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="r_evaluate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_r_4" edge="1" parent="1" source="r_evaluate" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="r_promote">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_r_5" edge="1" parent="1" source="r_promote" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="r_deploy_new">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_r_5l" connectable="0" parent="e_r_5" style="edgeLabel;html=1;fontSize=10;fontStyle=1;fillColor=none;strokeColor=none;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="Sim" vertex="1">
+          <mxGeometry relative="1" x="0.5" as="geometry" />
+        </mxCell>
+        <mxCell id="e_r_6" edge="1" parent="1" source="r_deploy_new" style="edgeStyle=orthogonalEdgeStyle;fontFamily=Arial;strokeWidth=2;" target="r_end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l_b_c1" edge="1" parent="1" source="b_objective" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#1e3a5f;strokeWidth=2;fontStyle=2;fontSize=9;fontFamily=Arial;" target="c1_sources" value="Requisitos&#xa;de Negócio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l_c1_c2" edge="1" parent="1" source="c1_end" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#9673a6;strokeWidth=2;fontStyle=2;fontSize=9;fontFamily=Arial;" target="c2_glue" value="Dados&#xa;Validados">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1140" y="330" />
+              <mxPoint x="150" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l_c2_c3" edge="1" parent="1" source="c2_leakage" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d6b656;strokeWidth=2;fontStyle=2;fontSize=9;fontFamily=Arial;" target="c3_pipeline" value="Features&#xa;Prontas">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1355" y="640" />
+              <mxPoint x="145" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l_c3_ci" edge="1" parent="1" source="c3_registry" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;strokeWidth=2;fontStyle=2;fontSize=9;fontFamily=Arial;" target="ci_trigger" value="Modelo +&#xa;Artefatos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1315" y="850" />
+              <mxPoint x="125" y="850" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l_ci_d" edge="1" parent="1" source="ci_artifacts" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#6c8ebf;strokeWidth=2;fontStyle=2;fontSize=9;fontFamily=Arial;" target="d_approval" value="Imagem&#xa;Validada">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1160" y="1030" />
+              <mxPoint x="145" y="1030" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l_d_m" edge="1" parent="1" source="d_rollout" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;fontStyle=2;fontSize=9;fontFamily=Arial;" target="m_datacapture" value="Tráfego de&#xa;Produção">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1145" y="1230" />
+              <mxPoint x="145" y="1230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l_m_r" edge="1" parent="1" source="m_retrain_trigger" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d79b00;strokeWidth=2;fontStyle=2;fontSize=9;fontFamily=Arial;" target="r_trigger" value="Drift&#xa;Confirmado">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1395" y="1500" />
+              <mxPoint x="135" y="1500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l_r_ci_loop" edge="1" parent="1" source="r_end" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#9673a6;strokeWidth=2;dashed=1;fontStyle=3;fontSize=10;fontFamily=Arial;" target="ci_trigger" value="↩ Ciclo&#xa;CRISP-DM">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3340" y="1570" />
+              <mxPoint x="3340" y="980" />
+              <mxPoint x="125" y="980" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l_d_b" edge="1" parent="1" source="d_rollout" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#1e3a5f;strokeWidth=2;fontStyle=2;fontSize=9;fontFamily=Arial;" target="b_approve" value="Métricas de&#xa;Negócio">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2705" y="1095" />
+              <mxPoint x="2705" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="300" width="700" x="1893" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=14;fontStyle=1;fontColor=#1f2937;fontFamily=Arial;" value="LEGENDA" vertex="1">
+          <mxGeometry height="25" width="100" x="2193" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="20" width="30" x="1913" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1t" parent="1" style="text;html=1;fontSize=11;fontFamily=Arial;" value="Modelagem / Treino (CRISP-DM)" vertex="1">
+          <mxGeometry height="25" width="250" x="1958" y="132" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="20" width="30" x="1913" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2t" parent="1" style="text;html=1;fontSize=11;fontFamily=Arial;" value="Processamento Dados / Decisão" vertex="1">
+          <mxGeometry height="25" width="250" x="1958" y="162" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="20" width="30" x="1913" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3t" parent="1" style="text;html=1;fontSize=11;fontFamily=Arial;" value="Feature Store / Deploy / Alertas" vertex="1">
+          <mxGeometry height="25" width="250" x="1958" y="192" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#f97316;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="20" width="30" x="1913" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4t" parent="1" style="text;html=1;fontSize=11;fontFamily=Arial;" value="Drift Detection / Monitoramento" vertex="1">
+          <mxGeometry height="25" width="250" x="1958" y="222" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="20" width="30" x="1913" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5t" parent="1" style="text;html=1;fontSize=11;fontFamily=Arial;" value="CI/CD Pipeline" vertex="1">
+          <mxGeometry height="25" width="250" x="1958" y="252" as="geometry" />
+        </mxCell>
+        <mxCell id="leg6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;fontFamily=Arial;shadow=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="20" width="30" x="1913" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="leg6t" parent="1" style="text;html=1;fontSize=11;fontFamily=Arial;" value="Entendimento Negócio/Dados (CRISP-DM)" vertex="1">
+          <mxGeometry height="25" width="250" x="1958" y="282" as="geometry" />
+        </mxCell>
+        <mxCell id="leg7" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#eab308;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="25" width="30" x="1913" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="leg7t" parent="1" style="text;html=1;fontSize=11;fontFamily=Arial;" value="Gateway de Decisão (BPMN)" vertex="1">
+          <mxGeometry height="25" width="250" x="1958" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="leg8" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontFamily=Arial;shadow=1;rounded=1;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="25" width="30" x="1913" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="leg8t" parent="1" style="text;html=1;fontSize=11;fontFamily=Arial;" value="Evento de Início/Fim (BPMN)" vertex="1">
+          <mxGeometry height="25" width="250" x="1958" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="ann_crisp" parent="1" style="text;html=1;strokeColor=#1e3a5f;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" value="🔄  CRISP-DM PHASES&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;1. Business Understanding → Raia 1&#xa;2. Data Understanding     → Raia 2 (EDA, Clustering)&#xa;3. Data Preparation       → Raia 3 (Glue ETL, Feature Store)&#xa;4. Modeling               → Raia 4 (train.py, HPO)&#xa;5. Evaluation             → Raia 5 (CI/CD, Tests)&#xa;6. Deployment             → Raia 6 (Docker, Endpoint)&#xa;7. Monitoring ★           → Raia 7 (Drift, CloudWatch)&#xa;8. Re-training Loop ★     → Raia 8 (Retreino automático)&#xa;9. RAG Integration ★      → Profile Cards → Vector Store&#xa;&#xa;★ = extensões MLOps ao CRISP-DM original" vertex="1">
+          <mxGeometry height="260" width="400" x="1910" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="ann_fs" parent="1" style="text;html=1;strokeColor=#b85450;fillColor=#fff0f0;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" value="🗄️  FEATURE STORE&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Offline Store (S3 Parquet)&#xa;  → Treinamento em batch&#xa;  → Reprodutibilidade garantida&#xa;&#xa;Online Store (Redis/DynamoDB)&#xa;  → Inferência em tempo real&#xa;  → Latência &lt; 20ms&#xa;&#xa;Feature Registry&#xa;  → Schema, versão, lineage&#xa;  → Statísticas de referência&#xa;  → Base para drift detection" vertex="1">
+          <mxGeometry height="260" width="360" x="2318" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="ann_drift" parent="1" style="text;html=1;strokeColor=#d6b656;fillColor=#fffff0;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" value="🔴  DRIFT DETECTION&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Data Drift (Feature Drift)&#xa;  → Distribuição das features mudou&#xa;  → KS Test, PSI, χ² test&#xa;  → Comparar vs snapshot do treino&#xa;&#xa;Concept Drift (Label Shift)&#xa;  → Relação X→y mudou no mundo real&#xa;  → Monitor ROC-AUC em janelas (7d/30d)&#xa;&#xa;Prediction Drift (Output Shift)&#xa;  → Taxa de churn prevista diverge&#xa;&#xa;Feature Store Drift ★&#xa;  → Stats atuais vs Feature Registry&#xa;  → Detecta inconsistências na origem" vertex="1">
+          <mxGeometry height="320" width="410" x="2738" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="ann_rag" parent="1" style="text;html=1;strokeColor=#ea580c;fillColor=#fffbeb;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=5;fontSize=11;fontFamily=Arial;" value="🤖  RAG INTEGRATION (★ extensão MLOps)&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Saída da fase Clustering → RAG Pipeline:&#xa;&#xa;1. Profile Cards (PF/PJ)&#xa;   → label + features médias + propensão&#xa;   → aprovação BU: BUSINESS_APPROVAL ≥ 4/5&#xa;&#xa;2. Vector Store (FAISS / pgvector)&#xa;   → embeds por cluster_id + segmento&#xa;   → filtro metadata: {segmento, cluster_id}&#xa;&#xa;3. Prompt Injection&#xa;   → System Prompt: perfil + contexto RAG&#xa;   → Faithfulness ≥ 0.85 · Retrieval@5 ≥ 0.80&#xa;&#xa;Métricas: PROFILE_COVERAGE ≥ 95% · ARI ≥ 0.85&#xa;          SILHOUETTE ≥ 0.40 · DOCS ≥ 5/perfil" vertex="1">
+          <mxGeometry height="310" width="420" x="3168" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="ann_pf_pj" parent="1" style="text;html=1;strokeColor=#7e22ce;fillColor=#faf5ff;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=5;fontSize=11;fontFamily=Arial;" value="👥  SPLIT PF / PJ (Clustering canônico)&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Pessoa Física (PF):&#xa;  Algoritmo: K-Means (n&gt;10k) · DBSCAN (irregular)&#xa;  Features: demográficas + comportamentais + transações&#xa;  Normalização: StandardScaler · RobustScaler (outliers)&#xa;&#xa;Pessoa Jurídica (PJ):&#xa;  Algoritmo: K-Means · Bisecting K-Means · GMM&#xa;  Features: porte + CNAE + faturamento + engajamento&#xa;  Normalização: Log-transform (faturamento/R$)&#xa;&#xa;Quality Gate Compartilhado:&#xa;  Silhouette ≥ 0.40 · CLUSTER_STABILITY_ARI ≥ 0.85&#xa;  PROFILE_COVERAGE ≥ 95% · BUSINESS_APPROVAL ≥ 4/5&#xa;  ITERATION_COUNT ≤ 5&#xa;&#xa;Gargalos monitorados:&#xa;  ⚠️ BU_WAIT_DAYS &gt; 15d → escalonar&#xa;  ⚠️ ACCESS_SLA_DAYS &gt; 10d → dados proxy" vertex="1">
+          <mxGeometry height="310" width="420" x="3608" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="glossary_acronyms" parent="1" style="text;html=1;strokeColor=#3b82f6;fillColor=#eff6ff;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;arcSize=5;fontSize=11;fontFamily=Arial;shadow=1;" value="&lt;div style=&quot;font-family:Arial, sans-serif; padding:12px;&quot;&gt;&lt;div style=&quot;font-size:13px; font-weight:bold; color:#1e3a5f; border-bottom:2px solid #3b82f6; padding-bottom:6px; margin-bottom:10px;&quot;&gt;📖 GLOSSÁRIO DE SIGLAS&lt;/div&gt;&lt;table style=&quot;width:100%; border-collapse:collapse; font-size:11px;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;API&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Application Programming Interface — interface de comunicação entre serviços&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ARI&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Adjusted Rand Index — estabilidade de clustering (meta ≥ 0.85)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;AWS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Amazon Web Services — plataforma de cloud computing&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;BPMN&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Business Process Model and Notation — notação padrão de processos&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;BU&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Business Unit — área de negócio responsável pela aprovação dos clusters&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;CNAE&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Classificação Nacional de Atividades Econômicas — feature de segmentação PJ&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;CRISP&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Cross-Industry Standard Process — base da metodologia CRISP-DM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;CRM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Customer Relationship Management — sistema de gestão de relacionamento&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;DBSCAN&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Density-Based Spatial Clustering — algoritmo para formas irregulares&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;EDA&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Exploratory Data Analysis — análise exploratória dos dados&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ETL&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Extract, Transform, Load — pipeline de ingestão de dados (AWS Glue)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;FAISS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Facebook AI Similarity Search — biblioteca de busca vetorial eficiente&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;GBM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Gradient Boosting Machine — modelo de classificação de churn (sklearn)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;GMM&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Gaussian Mixture Model — clustering probabilístico (soft assignment)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;HPO&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Hyperparameter Optimization — tuning de hiperparâmetros (SM / GridSearch)&lt;/td&gt;&lt;/tr&gt;&lt;tr style=&quot;background:#f8fafc;&quot;&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PF&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Pessoa Física — segmento de clientes individuais&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PJ&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Pessoa Jurídica — segmento de clientes empresariais&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;PSI&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Population Stability Index — detecção de drift em distribuições de features&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;RAG&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Retrieval-Augmented Generation — geração de texto com contexto recuperado&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;RDS&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; border-right:1px solid #e2e8f0;&quot;&gt;Relational Database Service — banco de dados gerenciado (AWS)&lt;/td&gt;&lt;td style=&quot;padding:4px 8px; font-weight:bold; color:#1e40af; white-space:nowrap;&quot;&gt;ROC&lt;/td&gt;&lt;td style=&quot;padding:4px 8px;&quot;&gt;Receiver Operating Characteristic — Área sob a curva (meta ≥ 0.70)&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="304" width="3980" x="40" y="1660" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
